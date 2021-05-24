@@ -1,17 +1,15 @@
 package com.geniusver.util;
 
 import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.resource.NoResourceException;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.setting.dialect.Props;
 import cn.hutool.system.SystemUtil;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -31,18 +29,29 @@ public class ArthasUtil {
      * <p>
      * This method will return only when arthas init completed.
      *
+     * @param command arthas command to execute
+     */
+    public static void executeCommand(String command) {
+        executeCommand(command, System.out, Throwable::printStackTrace);
+    }
+
+    /**
+     * Execute arthas command and review result in real time
+     * <p>
+     * This method will return only when arthas init completed.
+     *
      * @param arthasCommand    arthas command to execute
      * @param outputStream     outputStream to write result
      * @param exceptionHandler handler to handle exception
      */
-    public static void executeArthas(String arthasCommand,
-                                     OutputStream outputStream,
-                                     Consumer<Exception> exceptionHandler) {
+    public static void executeCommand(String arthasCommand,
+                                      OutputStream outputStream,
+                                      Consumer<Exception> exceptionHandler) {
         Assert.notBlank(arthasCommand, "arthasCommand cannot be empty");
         Assert.notNull(outputStream, "resultHandler cannot be null");
         Assert.notNull(exceptionHandler, "exceptionHandler cannot be null");
         if (config == null) {
-            config = new ArthasConfig();
+            setConfig(new ArthasConfig());
         }
         CountDownLatch latch = new CountDownLatch(1);
         ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(1,
@@ -85,5 +94,13 @@ public class ArthasUtil {
         } catch (InterruptedException e) {
             exceptionHandler.accept(e);
         }
+    }
+
+    public static ArthasConfig getConfig() {
+        return config;
+    }
+
+    public synchronized static void setConfig(ArthasConfig config) {
+        ArthasUtil.config = config;
     }
 }

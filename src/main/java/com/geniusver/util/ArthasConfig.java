@@ -38,6 +38,14 @@ public class ArthasConfig {
         return arthasBootJarPath;
     }
 
+    public void setJavaPath(String javaPath) {
+        this.javaPath = javaPath;
+    }
+
+    public void setArthasBootJarPath(String arthasBootJarPath) {
+        this.arthasBootJarPath = arthasBootJarPath;
+    }
+
     @Override
     public String toString() {
         return "ArthasConfig{" +
