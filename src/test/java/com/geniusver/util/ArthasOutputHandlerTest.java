@@ -30,8 +30,13 @@ class ArthasOutputHandlerTest {
     }
 
     @Test
-    void processNotFullRow() {
+    void expandBuffer() {
+        InputStream in = inputStream("1234567890123456789012345\n");
+        ArthasOutputHandler handler = createLineHandler(line ->
+                assertEquals("1234567890123456789012345", line)
+        );
 
+        handler.handle(in);
     }
 
     @Test
@@ -46,16 +51,11 @@ class ArthasOutputHandlerTest {
         assertEquals("test2", result.get(1));
     }
 
-    @Test
-    void processVeryLongRow() {
-
-    }
-
     private ArthasOutputHandler createLineHandler(Consumer<String> linesConsumer) {
         return new ArthasOutputHandler(
                 '\n',
-                ByteBuffer.allocate(32),
-                32,
+                ByteBuffer.allocate(20),
+                20,
                 System.out,
                 linesConsumer,
                 StandardCharsets.UTF_8

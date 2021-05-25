@@ -70,7 +70,7 @@ public class ArthasOutputHandler {
 
     private void expandBuffer() {
         ByteBuffer newBuffer = ByteBuffer.allocate(this.buffer.capacity() * 2);
-        newBuffer.put(this.buffer);
+        newBuffer.put(this.buffer.array());
         this.buffer = newBuffer;
     }
 
