@@ -6,6 +6,7 @@ import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -79,6 +80,11 @@ public class ArthasUtil {
                                 if (!StrUtil.isEmpty(line) && line.contains("Affect(class-cnt")) {
                                     latch.countDown();
                                 }
+                            }
+
+                            if (line.contains("No class or method is affected")) {
+                                latch.countDown();
+                                process.destroy();
                             }
                         },
                         StandardCharsets.UTF_8);

@@ -27,6 +27,13 @@ class ArthasUtilTest {
         runMathGame(10);
     }
 
+
+    @Test
+    void testExecuteFailed() throws ClassNotFoundException {
+//        Class.forName("com.geniusver.util.MathGame");
+        ArthasUtil.executeCommand("trace com.geniusver.util.MathGame primeFactors");
+        runMathGame(10);
+    }
     private void runMathGame(int times) {
         MathGame game = new MathGame();
         for (int i = 0; i < times; i++) {
