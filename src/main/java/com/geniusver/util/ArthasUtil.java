@@ -85,6 +85,7 @@ public class ArthasUtil {
                             if (line.contains("No class or method is affected")) {
                                 latch.countDown();
                                 process.destroy();
+                                exceptionHandler.accept(new ArthasExecuteException("Class not method not found. failed to execute command " + finalCommand));
                             }
                         },
                         StandardCharsets.UTF_8);
