@@ -6,6 +6,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,7 +36,14 @@ class ArthasOutputHandlerTest {
 
     @Test
     void processManyRow() {
+        InputStream in = inputStream("test1\ntest2\n");
+        List<String> result = new ArrayList<>();
+        ArthasOutputHandler handler = createLineHandler(result::add);
 
+        handler.handle(in);
+
+        assertEquals("test1", result.get(0));
+        assertEquals("test2", result.get(1));
     }
 
     @Test
@@ -45,7 +55,7 @@ class ArthasOutputHandlerTest {
         return new ArthasOutputHandler(
                 '\n',
                 ByteBuffer.allocate(32),
-                1024,
+                32,
                 System.out,
                 linesConsumer,
                 StandardCharsets.UTF_8

@@ -48,6 +48,8 @@ public class ArthasOutputHandler {
                 ensureBufferCapacity(len);
                 // write buffer
                 buffer.put(buff, 0, len);
+                // flip to read
+                buffer.flip();
                 // readLines
                 String line;
                 while ((line = BufferUtil.readLine(buffer, charset)) != null) {
