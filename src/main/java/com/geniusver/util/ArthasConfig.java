@@ -12,13 +12,14 @@ import java.util.Properties;
 public class ArthasConfig {
     private String javaPath = "java";
     private String arthasBootJarPath = "../arthas-boot.jar";
+    private int bufferSize = 8192;
     public static final String CUSTOM_PROPERTIES_NAME = "arthas-util-config.properties";
 
     public ArthasConfig() {
         init();
     }
 
-    private  synchronized void init() {
+    private synchronized void init() {
         Properties prop = null;
         try {
             prop = new Props(CUSTOM_PROPERTIES_NAME);
@@ -28,6 +29,7 @@ public class ArthasConfig {
         }
         javaPath = StrUtil.isEmpty(prop.getProperty("javaPath")) ? javaPath : prop.getProperty("javaPath");
         arthasBootJarPath = StrUtil.isEmpty(prop.getProperty("arthasBootJarPath")) ? arthasBootJarPath : prop.getProperty("arthasBootJarPath");
+        bufferSize = StrUtil.isEmpty(prop.getProperty("bufferSize")) ? bufferSize : Integer.parseInt(prop.getProperty("bufferSize"));
     }
 
     public String getJavaPath() {
@@ -51,6 +53,16 @@ public class ArthasConfig {
         return "ArthasConfig{" +
                 "javaPath='" + javaPath + '\'' +
                 ", arthasBootJarPath='" + arthasBootJarPath + '\'' +
+                ", bufferSize=" + bufferSize +
                 '}';
     }
+
+    public int getBufferSize() {
+        return bufferSize;
+    }
+
+    public void setBufferSize(int bufferSize) {
+        this.bufferSize = bufferSize;
+    }
+
 }

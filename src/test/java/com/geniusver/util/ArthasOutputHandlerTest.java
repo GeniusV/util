@@ -8,7 +8,6 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,7 +52,6 @@ class ArthasOutputHandlerTest {
 
     private ArthasOutputHandler createLineHandler(Consumer<String> linesConsumer) {
         return new ArthasOutputHandler(
-                '\n',
                 ByteBuffer.allocate(20),
                 20,
                 System.out,

@@ -16,7 +16,6 @@ import java.util.function.Consumer;
  * @author daniel.hua
  */
 public class ArthasOutputHandler {
-    private Character lineBreaker;
     private ByteBuffer buffer;
     private int cacheSize;
     private OutputStream outputStream;
@@ -24,13 +23,11 @@ public class ArthasOutputHandler {
     private Charset charset;
 
 
-    public ArthasOutputHandler(Character lineBreaker,
-                               ByteBuffer buffer,
+    public ArthasOutputHandler(ByteBuffer buffer,
                                int cacheSize,
                                OutputStream outputStream,
                                Consumer<String> linesConsumer,
                                Charset charset) {
-        this.lineBreaker = lineBreaker;
         this.buffer = buffer;
         this.cacheSize = cacheSize;
         this.outputStream = outputStream;
@@ -74,14 +71,6 @@ public class ArthasOutputHandler {
         this.buffer = newBuffer;
     }
 
-
-    public Character getLineBreaker() {
-        return lineBreaker;
-    }
-
-    public void setLineBreaker(Character lineBreaker) {
-        this.lineBreaker = lineBreaker;
-    }
 
     public ByteBuffer getBuffer() {
         return buffer;

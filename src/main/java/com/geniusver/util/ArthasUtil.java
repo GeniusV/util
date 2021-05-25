@@ -1,7 +1,5 @@
 package com.geniusver.util;
 
-import cn.hutool.core.io.FastByteArrayOutputStream;
-import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.RuntimeUtil;
@@ -10,6 +8,8 @@ import cn.hutool.system.SystemUtil;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -64,25 +64,25 @@ public class ArthasUtil {
                 String finalCommand = StrFormatter.format("{} -jar \"{}\" {} -c \"{}\"",
                         config.getJavaPath(),
                         config.getArthasBootJarPath(),
-                        SystemUtil.getCurrentPID(), arthasCommand);
+                        SystemUtil.getCurrentPID(),
+                        arthasCommand);
                 Process process = RuntimeUtil.exec(finalCommand);
                 InputStream inputStream = process.getInputStream();
-                byte[] buff = new byte[8192];
-                int len;
-                FastByteArrayOutputStream analyzeOutputStream = new FastByteArrayOutputStream();
-                while ((len = inputStream.read(buff)) > 0) {
-                    outputStream.write(buff, 0, len);
-
-                    // if arthas not started yet
-                    if (latch.getCount() > 0) {
-                        analyzeOutputStream.write(buff, 0, len);
-                        String str = analyzeOutputStream.toString();
-                        // read from inputStream, if shows affect, then we consider arthas init complete
-                        if (!StrUtil.isEmpty(str) && str.contains("Affect(class-cnt")) {
-                            latch.countDown();
-                        }
-                    }
-                }
+                ArthasOutputHandler handler = new ArthasOutputHandler(
+                        ByteBuffer.allocate(config.getBufferSize() * 2),
+                        config.getBufferSize(),
+                        outputStream,
+                        line -> {
+                            // if arthas not started yet
+                            if (latch.getCount() > 0) {
+                                // read from inputStream, if shows affect, then we consider arthas init complete
+                                if (!StrUtil.isEmpty(line) && line.contains("Affect(class-cnt")) {
+                                    latch.countDown();
+                                }
+                            }
+                        },
+                        StandardCharsets.UTF_8);
+                handler.handle(inputStream);
             } catch (Exception e) {
                 exceptionHandler.accept(e);
             }
