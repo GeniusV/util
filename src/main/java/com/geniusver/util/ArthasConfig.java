@@ -24,7 +24,7 @@ public class ArthasConfig {
         try {
             prop = new Props(CUSTOM_PROPERTIES_NAME);
         } catch (NoResourceException e) {
-            System.out.println(CUSTOM_PROPERTIES_NAME + " not exist");
+            System.out.println(CUSTOM_PROPERTIES_NAME + " not under classpath");
             return;
         }
         javaPath = StrUtil.isEmpty(prop.getProperty("javaPath")) ? javaPath : prop.getProperty("javaPath");
