@@ -3,11 +3,8 @@ package com.geniusver.util;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.util.RuntimeUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.system.SystemUtil;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -60,38 +57,29 @@ public class ArthasUtil {
                 0L,
                 TimeUnit.SECONDS,
                 new SynchronousQueue<>());
+        String finalCommand = StrFormatter.format("{} -jar \"{}\" {} -c \"{}\"",
+                config.getJavaPath(),
+                config.getArthasBootJarPath(),
+                SystemUtil.getCurrentPID(),
+                arthasCommand);
         threadPoolExecutor.submit(() -> {
             try {
-                String finalCommand = StrFormatter.format("{} -jar \"{}\" {} -c \"{}\"",
-                        config.getJavaPath(),
-                        config.getArthasBootJarPath(),
-                        SystemUtil.getCurrentPID(),
-                        arthasCommand);
                 Process process = RuntimeUtil.exec(finalCommand);
-                InputStream inputStream = process.getInputStream();
                 ArthasOutputHandler handler = new ArthasOutputHandler(
                         ByteBuffer.allocate(config.getBufferSize() * 2),
                         config.getBufferSize(),
                         outputStream,
-                        line -> {
-                            // if arthas not started yet
-                            if (latch.getCount() > 0) {
-                                // read from inputStream, if shows affect, then we consider arthas init complete
-                                if (!StrUtil.isEmpty(line) && line.contains("Affect(class-cnt")) {
-                                    latch.countDown();
-                                }
-                            }
-
-                            if (line.contains("No class or method is affected")) {
-                                latch.countDown();
-                                process.destroy();
-                                exceptionHandler.accept(new ArthasExecuteException("Class not method not found. failed to execute command " + finalCommand));
-                            }
-                        },
                         StandardCharsets.UTF_8);
                 handler.handle(process, latch);
-            } catch (Exception e) {
+            } catch (ArthasExecuteException e) {
+                e.setArthasCommand(arthasCommand);
+                e.setFinalCommand(finalCommand);
                 exceptionHandler.accept(e);
+            } catch (Exception e) {
+                ArthasExecuteException ex = new ArthasExecuteException("arthas command execute failed", e);
+                ex.setArthasCommand(arthasCommand);
+                ex.setFinalCommand(finalCommand);
+                exceptionHandler.accept(ex);
             }
         });
         threadPoolExecutor.shutdown();

@@ -6,6 +6,8 @@ package com.geniusver.util;
  * @author daniel.hua
  */
 public class ArthasExecuteException extends RuntimeException{
+    private String arthasCommand;
+    private String finalCommand;
     public ArthasExecuteException() {
         super();
     }
@@ -24,5 +26,21 @@ public class ArthasExecuteException extends RuntimeException{
 
     protected ArthasExecuteException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    public String getArthasCommand() {
+        return arthasCommand;
+    }
+
+    public void setArthasCommand(String arthasCommand) {
+        this.arthasCommand = arthasCommand;
+    }
+
+    public String getFinalCommand() {
+        return finalCommand;
+    }
+
+    public void setFinalCommand(String finalCommand) {
+        this.finalCommand = finalCommand;
     }
 }

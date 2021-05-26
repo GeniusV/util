@@ -11,23 +11,17 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 /**
  * @author daniel.hua
  */
 public class ArthasOutputHandler {
-    private ByteBuffer buffer;
-    private int cacheSize;
-    private OutputStream outputStream;
-    private Consumer<String> linesConsumer;
-    private Charset charset;
     private final BiConsumer<String, ArthasInitProcessContext> initLineConsumer = (line, context) -> {
         CountDownLatch latch = context.getInitSuccessLatch();
         Process process = context.getProcess();
         // if arthas not started yet
         if (latch.getCount() > 0) {
-            // read from inputStream, if shows affect, then we consider arthas init complete
+            // read from inputStream, if shows affect, then we consider arthas init completeA
             if (!StrUtil.isEmpty(line) && line.contains("Affect(class-cnt")) {
                 latch.countDown();
             }
@@ -40,43 +34,21 @@ public class ArthasOutputHandler {
         }
     };
 
+    private ByteBuffer buffer;
+    private int cacheSize;
+    private OutputStream outputStream;
+    private Charset charset;
+
     public ArthasOutputHandler(ByteBuffer buffer,
                                int cacheSize,
                                OutputStream outputStream,
-                               Consumer<String> linesConsumer,
                                Charset charset) {
         this.buffer = buffer;
         this.cacheSize = cacheSize;
         this.outputStream = outputStream;
-        this.linesConsumer = linesConsumer;
         this.charset = charset;
     }
 
-
-
-    public void handle(InputStream in) {
-        try {
-            byte[] buff = new byte[cacheSize];
-            int len;
-            while ((len = in.read(buff)) > 0) {
-                // write to out
-                this.outputStream.write(buff, 0, len);
-                ensureBufferCapacity(len);
-                // write buffer
-                buffer.put(buff, 0, len);
-                // flip to read
-                buffer.flip();
-                // readLines
-                String line;
-                while ((line = BufferUtil.readLine(buffer, charset)) != null) {
-                    linesConsumer.accept(line);
-                }
-                buffer.compact();
-            }
-        } catch (IOException e) {
-            throw new IORuntimeException(e);
-        }
-    }
 
     public void handle(Process process, CountDownLatch initSuccessLatch) {
         InputStream in = process.getInputStream();
@@ -139,14 +111,6 @@ public class ArthasOutputHandler {
 
     public void setOutputStream(OutputStream outputStream) {
         this.outputStream = outputStream;
-    }
-
-    public Consumer<String> getLinesConsumer() {
-        return linesConsumer;
-    }
-
-    public void setLinesConsumer(Consumer<String> linesConsumer) {
-        this.linesConsumer = linesConsumer;
     }
 
     public Charset getCharset() {
