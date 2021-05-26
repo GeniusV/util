@@ -2,17 +2,18 @@ package com.geniusver.util;
 
 import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.concurrent.CountDownLatch;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 /**
- *
- *
  * @author daniel.hua
  */
 public class ArthasOutputHandler {
@@ -21,7 +22,23 @@ public class ArthasOutputHandler {
     private OutputStream outputStream;
     private Consumer<String> linesConsumer;
     private Charset charset;
+    private final BiConsumer<String, ArthasInitProcessContext> initLineConsumer = (line, context) -> {
+        CountDownLatch latch = context.getInitSuccessLatch();
+        Process process = context.getProcess();
+        // if arthas not started yet
+        if (latch.getCount() > 0) {
+            // read from inputStream, if shows affect, then we consider arthas init complete
+            if (!StrUtil.isEmpty(line) && line.contains("Affect(class-cnt")) {
+                latch.countDown();
+            }
+        }
 
+        if (line.contains("No class or method is affected")) {
+            latch.countDown();
+            process.destroy();
+            throw new ArthasExecuteException("Class not method not found. failed to execute command ");
+        }
+    };
 
     public ArthasOutputHandler(ByteBuffer buffer,
                                int cacheSize,
@@ -34,6 +51,8 @@ public class ArthasOutputHandler {
         this.linesConsumer = linesConsumer;
         this.charset = charset;
     }
+
+
 
     public void handle(InputStream in) {
         try {
@@ -51,6 +70,32 @@ public class ArthasOutputHandler {
                 String line;
                 while ((line = BufferUtil.readLine(buffer, charset)) != null) {
                     linesConsumer.accept(line);
+                }
+                buffer.compact();
+            }
+        } catch (IOException e) {
+            throw new IORuntimeException(e);
+        }
+    }
+
+    public void handle(Process process, CountDownLatch initSuccessLatch) {
+        InputStream in = process.getInputStream();
+        try {
+            byte[] buff = new byte[cacheSize];
+            int len;
+            while ((len = in.read(buff)) > 0) {
+                // write to out
+                this.outputStream.write(buff, 0, len);
+                ensureBufferCapacity(len);
+                // write buffer
+                buffer.put(buff, 0, len);
+                // flip to read
+                buffer.flip();
+                // readLines
+                ArthasInitProcessContext initProcessContext = new ArthasInitProcessContext(process, initSuccessLatch);
+                String line;
+                while ((line = BufferUtil.readLine(buffer, charset)) != null) {
+                    initLineConsumer.accept(line, initProcessContext);
                 }
                 buffer.compact();
             }
@@ -110,5 +155,23 @@ public class ArthasOutputHandler {
 
     public void setCharset(Charset charset) {
         this.charset = charset;
+    }
+
+    private static class ArthasInitProcessContext {
+        private Process process;
+        private CountDownLatch initSuccessLatch;
+
+        public ArthasInitProcessContext(Process process, CountDownLatch initSuccessLatch) {
+            this.process = process;
+            this.initSuccessLatch = initSuccessLatch;
+        }
+
+        public Process getProcess() {
+            return process;
+        }
+
+        public CountDownLatch getInitSuccessLatch() {
+            return initSuccessLatch;
+        }
     }
 }

@@ -89,7 +89,7 @@ public class ArthasUtil {
                             }
                         },
                         StandardCharsets.UTF_8);
-                handler.handle(inputStream);
+                handler.handle(process, latch);
             } catch (Exception e) {
                 exceptionHandler.accept(e);
             }
