@@ -2,6 +2,7 @@ package com.geniusver.util;
 
 import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
@@ -52,6 +53,7 @@ public class ArthasOutputHandler {
 
     public void handle(Process process, CountDownLatch initSuccessLatch) {
         InputStream in = process.getInputStream();
+        ArthasInitProcessContext initProcessContext = new ArthasInitProcessContext(process, initSuccessLatch);
         try {
             byte[] buff = new byte[cacheSize];
             int len;
@@ -64,7 +66,6 @@ public class ArthasOutputHandler {
                 // flip to read
                 buffer.flip();
                 // readLines
-                ArthasInitProcessContext initProcessContext = new ArthasInitProcessContext(process, initSuccessLatch);
                 String line;
                 while ((line = BufferUtil.readLine(buffer, charset)) != null) {
                     initLineConsumer.accept(line, initProcessContext);
