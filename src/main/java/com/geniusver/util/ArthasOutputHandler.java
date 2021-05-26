@@ -69,6 +69,7 @@ public class ArthasOutputHandler {
                 while ((line = BufferUtil.readLine(buffer, charset)) != null) {
                     initLineConsumer.accept(line, initProcessContext);
                 }
+                // clean already read lines
                 buffer.compact();
             }
         } catch (IOException e) {
