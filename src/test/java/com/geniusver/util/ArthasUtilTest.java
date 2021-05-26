@@ -33,7 +33,6 @@ class ArthasUtilTest {
 //        Class.forName("com.geniusver.util.MathGame");
         ArthasUtil.executeCommand("trace com.geniusver.util.MathGame primeFactors");
         runMathGame(10);
-        Thread.sleep(1000L);
     }
     private void runMathGame(int times) {
         MathGame game = new MathGame();
