@@ -2,6 +2,7 @@ package com.geniusver.util;
 
 import cn.hutool.core.io.BufferUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
@@ -28,6 +29,7 @@ public class ArthasOutputHandler {
         }
 
         if (line.contains("No class or method is affected")) {
+            outputRemaining(process);
             latch.countDown();
             process.destroy();
             throw new ArthasExecuteException("Class not method not found. failed to execute command ");
@@ -75,6 +77,10 @@ public class ArthasOutputHandler {
         } catch (IOException e) {
             throw new IORuntimeException(e);
         }
+    }
+
+    private void outputRemaining(Process process) {
+        IoUtil.copy(process.getInputStream(), this.outputStream);
     }
 
     private void ensureBufferCapacity(int len) {
