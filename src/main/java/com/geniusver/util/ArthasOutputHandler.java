@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.function.BiConsumer;
 
 /**
- * @author daniel.hua
+ * @author GeniusV
  */
 public class ArthasOutputHandler {
     private final BiConsumer<String, ArthasInitProcessContext> initLineConsumer = (line, context) -> {

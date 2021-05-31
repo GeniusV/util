@@ -3,7 +3,7 @@ package com.geniusver.util;
 /**
  * ArthasExecuteException
  *
- * @author daniel.hua
+ * @author GeniusV
  */
 public class ArthasExecuteException extends RuntimeException{
     private String arthasCommand;
