@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author GeniusV
  */
-class ArthasUtilTest {
+class ArthasUtilIntegrationTest {
     @BeforeAll
     static void beforeAll() {
         ArthasConfig config = new ArthasConfig();
