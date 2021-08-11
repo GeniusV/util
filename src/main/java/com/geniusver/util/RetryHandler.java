@@ -12,17 +12,17 @@ import java.util.function.Function;
  * @author GeniusV
  */
 public class RetryHandler<T, R> {
-    private int totalRetryTimes;
-    private long retryInerval;
+    private final int totalTryTimes;
+    private final long retryInterval;
     private Function<T, R> handler;
     private BiConsumer<Exception, T> exceptionHandler;
     private Function<T, R> fallbackHandler;
 
-    public RetryHandler(int totalRetryTimes, long retryInerval) {
-        Assert.isTrue(totalRetryTimes >= 0);
-        Assert.isTrue(retryInerval >= 0);
-        this.totalRetryTimes = totalRetryTimes + 1;
-        this.retryInerval = retryInerval;
+    public RetryHandler(int totalTryTimes, long retryInterval) {
+        Assert.isTrue(totalTryTimes >= 0);
+        Assert.isTrue(retryInterval >= 0);
+        this.totalTryTimes = totalTryTimes + 1;
+        this.retryInterval = retryInterval;
     }
 
     public RetryHandler<T, R> doTry(Function<T, R> handler) {
@@ -48,7 +48,7 @@ public class RetryHandler<T, R> {
         Assert.notNull(exceptionHandler, "exceptionHandler cannot be null");
         int currentProcessTimes = 1;
         R res = null;
-        while (currentProcessTimes <= totalRetryTimes) {
+        while (currentProcessTimes <= totalTryTimes) {
             Exception ex = null;
             try {
                 res = handler.apply(param);
@@ -57,8 +57,8 @@ public class RetryHandler<T, R> {
                 ex = e;
             }
             exceptionHandler.accept(ex, param);
-            if (currentProcessTimes < totalRetryTimes && retryInerval > 0) {
-                ThreadUtil.sleep(retryInerval);
+            if (currentProcessTimes < totalTryTimes && retryInterval > 0) {
+                ThreadUtil.sleep(retryInterval);
             }
             currentProcessTimes++;
         }
@@ -68,12 +68,12 @@ public class RetryHandler<T, R> {
         return res;
     }
 
-    public int getTotalRetryTimes() {
-        return totalRetryTimes;
+    public int getTotalTryTimes() {
+        return totalTryTimes;
     }
 
-    public long getRetryInerval() {
-        return retryInerval;
+    public long getRetryInterval() {
+        return retryInterval;
     }
 
     public Function<T, R> getHandler() {

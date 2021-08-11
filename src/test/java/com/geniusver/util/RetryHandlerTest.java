@@ -105,9 +105,12 @@ class RetryHandlerTest {
         AtomicInteger tryTimes = new AtomicInteger();
         AtomicInteger catchTimes = new AtomicInteger();
         AtomicInteger fallbackTimes = new AtomicInteger();
-        RetryHandler<Integer, String> rh = new RetryHandler<Integer, String>(0, 0)
+        RetryHandler<Integer, String> rh = new RetryHandler<Integer, String>(2, 0)
                 .doTry(i -> {
                     tryTimes.getAndIncrement();
+                    if (tryTimes.get() < 2) {
+                        throw new RuntimeException("failed");
+                    }
                     return "1";
                 })
                 .doCatch((e, i) -> {
@@ -120,8 +123,8 @@ class RetryHandlerTest {
                 });
         String res = rh.handle(1);
         assertEquals("1", res);
-        assertEquals(1, tryTimes.get());
-        assertEquals(0, catchTimes.get());
+        assertEquals(2, tryTimes.get());
+        assertEquals(1, catchTimes.get());
         assertEquals(0, fallbackTimes.get());
     }
 
