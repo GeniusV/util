@@ -4,8 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * RetryHandlerTest
@@ -201,5 +200,46 @@ class RetryHandlerTest {
         assertEquals(3, tryTimes.get());
         assertEquals(3, catchTimes.get());
         assertEquals(1, fallbackTimes.get());
+    }
+
+    @Test
+    void withoutFallback() {
+        AtomicInteger tryTimes = new AtomicInteger();
+        AtomicInteger catchTimes = new AtomicInteger();
+        AtomicInteger fallbackTimes = new AtomicInteger();
+        RetryHandler<Integer, String> rh = new RetryHandler<Integer, String>(2, 0)
+                .doTry(i -> {
+                    tryTimes.getAndIncrement();
+                    throw new RuntimeException("try failed");
+                })
+                .doCatch((e, i) -> {
+                    catchTimes.getAndIncrement();
+                    System.out.println(e.toString() + " " + i);
+                });
+        assertThrows(RuntimeException.class, () -> rh.handle(1));
+        assertEquals(3, tryTimes.get());
+        assertEquals(3, catchTimes.get());
+        assertEquals(0, fallbackTimes.get());
+    }
+
+    @Test
+    void withoutFallbackReturnNull() {
+        AtomicInteger tryTimes = new AtomicInteger();
+        AtomicInteger catchTimes = new AtomicInteger();
+        AtomicInteger fallbackTimes = new AtomicInteger();
+        RetryHandler<Integer, String> rh = new RetryHandler<Integer, String>(2, 0)
+                .doTry(i -> {
+                    tryTimes.getAndIncrement();
+                    throw new RuntimeException("try failed");
+                })
+                .doCatch((e, i) -> {
+                    catchTimes.getAndIncrement();
+                    System.out.println(e.toString() + " " + i);
+                }).returnNull(true);
+        String res = rh.handle(1);
+        assertNull(res);
+        assertEquals(3, tryTimes.get());
+        assertEquals(3, catchTimes.get());
+        assertEquals(0, fallbackTimes.get());
     }
 }

@@ -1,6 +1,7 @@
 package com.geniusver.util;
 
 import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.StrFormatter;
 import cn.hutool.core.thread.ThreadUtil;
 
 import java.util.function.BiConsumer;
@@ -8,7 +9,7 @@ import java.util.function.Function;
 
 /**
  * RetryHandler <p>
- *
+ * <p>
  * Example: <code><pre>
  * RetryHandler<Integer, String> rh = new RetryHandler<Integer, String>(3, 1000L)
  *             .doTry(i -> {
@@ -22,15 +23,19 @@ import java.util.function.Function;
  *             });
  * String res = rh.handle(1);
  * </pre></code>
- *
+ * <p>
  * If doTry lambda throws an exception, the exception can be handled in doCatch lambda.
  * Then current thread will sleep 1000ms and re-execute doTry lambda up to 3 time(total execute 4 times).
- * When re-execute doTry lambda for the third time and still throws an exception, fallback lambda will be called.<p>
- *
+ * When re-execute doTry lambda for the third time and still throws an exception, fallback lambda will be called.
+ * <p>
  * If any exception is thrown from doCatch and fallback lambda will not be caught by RetryHandler. This is useful if
  * the exception from doTry lambda is not recoverable (like ClassNotFoundException), you can directly throw the exception
- * or wrap it to stop whole process. <p>
- *
+ * or wrap it to stop whole process.
+ * <p>
+ * fallback is optional. By default, if running out of retry times and still throws exception, the last exception will be
+ * thrown.
+ * If you want to return null if all trys are failed, use returnNull(true).
+ * <p>
  * This class IS NOT thread-safe, so DO NOT use it between threads. <p>
  *
  * @author GeniusV
@@ -38,6 +43,7 @@ import java.util.function.Function;
 public class RetryHandler<T, R> {
     private final int totalTryTimes;
     private final long retryInterval;
+    private boolean returnNull = false;
     private Function<T, R> handler;
     private BiConsumer<Exception, T> exceptionHandler;
     private Function<T, R> fallbackHandler;
@@ -67,6 +73,11 @@ public class RetryHandler<T, R> {
         return this;
     }
 
+    public RetryHandler<T, R> returnNull(boolean returnNull) {
+        this.returnNull = returnNull;
+        return this;
+    }
+
     public R handle(T param) {
         Assert.notNull(handler, "handler cannot be null");
         Assert.notNull(exceptionHandler, "exceptionHandler cannot be null");
@@ -83,6 +94,11 @@ public class RetryHandler<T, R> {
             exceptionHandler.accept(ex, param);
             if (currentProcessTimes < totalTryTimes && retryInterval > 0) {
                 ThreadUtil.sleep(retryInterval);
+            }
+            if (!returnNull
+                    && fallbackHandler == null
+                    && currentProcessTimes >= totalTryTimes) {
+                throw new RuntimeException(StrFormatter.format("Failed in total {} times", totalTryTimes), ex);
             }
             currentProcessTimes++;
         }
