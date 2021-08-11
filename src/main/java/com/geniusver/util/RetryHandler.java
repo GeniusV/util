@@ -127,4 +127,8 @@ public class RetryHandler<T, R> {
     public Function<T, R> getFallbackHandler() {
         return fallbackHandler;
     }
+
+    public boolean isReturnNull() {
+        return returnNull;
+    }
 }
