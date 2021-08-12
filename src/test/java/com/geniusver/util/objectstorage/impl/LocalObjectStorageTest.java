@@ -43,6 +43,12 @@ class LocalObjectStorageTest {
     }
 
     @Test
+    void remove() {
+        storage.remove("test", "2");
+        System.out.println(storage.get("test", "2", Map.class));
+    }
+
+    @Test
     void saveBenchmark() {
         Map<String, String> dataMap = new HashMap<>();
         int n = 100;
