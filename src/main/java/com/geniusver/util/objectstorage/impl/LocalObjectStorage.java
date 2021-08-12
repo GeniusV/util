@@ -1,13 +1,11 @@
 package com.geniusver.util.objectstorage.impl;
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.text.StrFormatter;
 import com.geniusver.util.objectstorage.*;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -100,7 +98,7 @@ public class LocalObjectStorage implements ObjectStorage {
             byte[] data = serializer.serialize(obj);
             FileUtil.writeBytes(data, file);
         } catch (Exception e) {
-            throw new ObjectStorageException(StrFormatter.format("Failed to save topic '{}', id '{}'",topic, id), e);
+            throw new ObjectStorageException(StrFormatter.format("Failed to save topic '{}', id '{}'", topic, id), e);
         }
     }
 
