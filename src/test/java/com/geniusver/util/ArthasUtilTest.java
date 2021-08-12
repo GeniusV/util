@@ -16,6 +16,3 @@
 
 package com.geniusver.util;
 
-import cn.hutool.core.io.resource.NoResourceException;
-import cn.hutool.setting.dialect.Props;
-import org.junit.jupiter.api.Test;

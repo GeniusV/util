@@ -5,7 +5,7 @@ package com.geniusver.util.objectstorage;
  *
  * @author GeniusV
  */
-public class ObjectStorageException extends RuntimeException{
+public class ObjectStorageException extends RuntimeException {
     /**
      * Constructs a new runtime exception with {@code null} as its
      * detail message.  The cause is not initialized, and may subsequently be

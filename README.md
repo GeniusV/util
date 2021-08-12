@@ -8,6 +8,7 @@ Can directly run arthas command in unit tests.
 
 Configuration:
 Put `arthas-util-config.properties` under classpath, following are default settings:
+
 ```properties
 # java path
 javaPath=java

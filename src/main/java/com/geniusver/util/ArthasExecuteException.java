@@ -5,9 +5,10 @@ package com.geniusver.util;
  *
  * @author GeniusV
  */
-public class ArthasExecuteException extends RuntimeException{
+public class ArthasExecuteException extends RuntimeException {
     private String arthasCommand;
     private String finalCommand;
+
     public ArthasExecuteException() {
         super();
     }

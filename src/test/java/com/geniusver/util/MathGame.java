@@ -31,7 +31,7 @@ public class MathGame {
 
     public void run() throws InterruptedException {
         try {
-            int number = random.nextInt()/10000;
+            int number = random.nextInt() / 10000;
             List<Integer> primeFactors = primeFactors(number);
             print(number, primeFactors);
 

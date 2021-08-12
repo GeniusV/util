@@ -19,6 +19,7 @@ class LocalObjectStorageTest {
     ObjectStorage storage = new LocalObjectStorage("D:\\java-projects\\util\\target",
             new JacksonSerializer(),
             new JacksonDeserializer());
+
     @Test
     void save() {
 
@@ -52,7 +53,7 @@ class LocalObjectStorageTest {
     void saveBenchmark() {
         Map<String, String> dataMap = new HashMap<>();
         int n = 100;
-        for (int i = 0; i <n; i++) {
+        for (int i = 0; i < n; i++) {
             dataMap.put(RandomUtil.randomString(10), RandomUtil.randomString(10));
         }
         long t = System.currentTimeMillis();
