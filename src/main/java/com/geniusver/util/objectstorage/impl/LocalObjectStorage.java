@@ -1,15 +1,19 @@
 package com.geniusver.util.objectstorage.impl;
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IORuntimeException;
 import cn.hutool.core.lang.Assert;
-import com.geniusver.util.objectstorage.Deserializer;
-import com.geniusver.util.objectstorage.ObjectStorage;
-import com.geniusver.util.objectstorage.ObjectWrapper;
-import com.geniusver.util.objectstorage.Serializer;
+import cn.hutool.core.text.StrFormatter;
+import com.geniusver.util.objectstorage.*;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * LocalObjectStorage
@@ -46,12 +50,17 @@ public class LocalObjectStorage implements ObjectStorage {
         Assert.notEmpty(topic, "topic cannot be empty");
         Assert.notEmpty(id, "id cannot be empty");
         Assert.notNull(clazz, "class cannot be empty");
-        File file = getFile(topic, id);
-        if (!file.exists()) {
-            return null;
+        try {
+            File file = getFile(topic, id);
+            if (!file.exists()) {
+                return null;
+            }
+            byte[] data = FileUtil.readBytes(file);
+            return deserializer.deserialize(data, clazz);
+        } catch (Exception e) {
+            throw new ObjectStorageException(StrFormatter.format("Failed to get topic '{}', id '{}' as {}",
+                    topic, id, clazz.getName()), e);
         }
-        byte[] data = FileUtil.readBytes(file);
-        return deserializer.deserialize(data, clazz);
     }
 
     private File getFile(String topic, String id) {
@@ -63,7 +72,22 @@ public class LocalObjectStorage implements ObjectStorage {
         Assert.notEmpty(topic, "topic cannot be empty");
         Assert.notEmpty(idPattern, "idPattern cannot be empty");
         Assert.notNull(clazz, "class cannot be empty");
-        return null;
+
+        Pattern pattern = Pattern.compile(idPattern);
+        File[] files = new File(basePath, topic).listFiles((dir, name) -> {
+            String id = name.replace(".json", "");
+            return pattern.matcher(id).matches();
+        });
+        if (files == null) {
+            return new ArrayList<>();
+        }
+        List<ObjectWrapper<T>> res = Arrays.stream(files).map(file -> {
+            String id = file.getName().replace(".json", "");
+            T obj = get(topic, id, clazz);
+            return new ObjectWrapper<T>(topic, id, obj);
+        }).collect(Collectors.toList());
+
+        return res;
     }
 
     @Override
@@ -71,14 +95,22 @@ public class LocalObjectStorage implements ObjectStorage {
         Assert.notEmpty(topic, "topic cannot be empty");
         Assert.notEmpty(id, "id cannot be empty");
         Assert.notNull(obj, "obj cannot be empty");
-        File file = getFile(topic, id);
-        byte[] data = serializer.serialize(obj);
-        FileUtil.writeBytes(data, file);
+        try {
+            File file = getFile(topic, id);
+            byte[] data = serializer.serialize(obj);
+            FileUtil.writeBytes(data, file);
+        } catch (Exception e) {
+            throw new ObjectStorageException(StrFormatter.format("Failed to save topic '{}', id '{}'",topic, id), e);
+        }
     }
 
     @Override
     public void remove(String topic, String id) {
         Assert.notEmpty(topic, "topic cannot be empty");
         Assert.notEmpty(id, "id cannot be empty");
+        File file = getFile(topic, id);
+        if (file.exists()) {
+            FileUtil.del(file);
+        }
     }
 }

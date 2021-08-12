@@ -2,6 +2,7 @@ package com.geniusver.util.objectstorage.impl;
 
 import cn.hutool.core.util.RandomUtil;
 import com.geniusver.util.objectstorage.ObjectStorage;
+import com.geniusver.util.objectstorage.ObjectWrapper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -30,6 +31,15 @@ class LocalObjectStorageTest {
     void get() {
         List<Integer> res = storage.get("test", "1", List.class);
         System.out.println(res);
+    }
+
+
+    @Test
+    void find() {
+        List<ObjectWrapper<Map>> res = storage.find("test", ".*2.*", Map.class);
+        res.forEach(ow -> {
+            System.out.println(ow.getId());
+        });
     }
 
     @Test
