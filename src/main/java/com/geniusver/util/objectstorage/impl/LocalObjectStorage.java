@@ -7,6 +7,8 @@ import com.geniusver.util.objectstorage.ObjectStorage;
 import com.geniusver.util.objectstorage.ObjectWrapper;
 import com.geniusver.util.objectstorage.Serializer;
 
+import java.io.File;
+import java.nio.file.Paths;
 import java.util.List;
 
 /**
@@ -44,7 +46,16 @@ public class LocalObjectStorage implements ObjectStorage {
         Assert.notEmpty(topic, "topic cannot be empty");
         Assert.notEmpty(id, "id cannot be empty");
         Assert.notNull(clazz, "class cannot be empty");
-        return null;
+        File file = getFile(topic, id);
+        if (!file.exists()) {
+            return null;
+        }
+        byte[] data = FileUtil.readBytes(file);
+        return deserializer.deserialize(data, clazz);
+    }
+
+    private File getFile(String topic, String id) {
+        return Paths.get(this.basePath, topic, id + ".json").toFile();
     }
 
     @Override
@@ -60,7 +71,9 @@ public class LocalObjectStorage implements ObjectStorage {
         Assert.notEmpty(topic, "topic cannot be empty");
         Assert.notEmpty(id, "id cannot be empty");
         Assert.notNull(obj, "obj cannot be empty");
-
+        File file = getFile(topic, id);
+        byte[] data = serializer.serialize(obj);
+        FileUtil.writeBytes(data, file);
     }
 
     @Override
