@@ -19,7 +19,6 @@ package com.geniusver.util.objectstorage.impl;
 import cn.hutool.core.util.RandomUtil;
 import com.geniusver.util.objectstorage.ObjectStorage;
 import com.geniusver.util.objectstorage.ObjectWrapper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -28,12 +27,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * LocalObjectStorageTest
+ * LocalObjectStorageIntegrationTest
  *
  * @author GeniusV
  */
-@Disabled
-class LocalObjectStorageTest {
+public class LocalObjectStorageIntegrationTest {
     ObjectStorage storage = new LocalObjectStorage("D:\\java-projects\\util\\target",
             new JacksonSerializer(),
             new JacksonDeserializer());
