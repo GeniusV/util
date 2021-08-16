@@ -27,6 +27,7 @@
     <modules>
         <module>util-arthas</module>
         <module>util-core</module>
+        <module>util-persistence-example</module>
     </modules>
 
     <name>util</name>
