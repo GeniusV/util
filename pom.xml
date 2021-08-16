@@ -26,6 +26,7 @@
     <version>0.1.0</version>
     <modules>
         <module>util-arthas</module>
+        <module>util-core</module>
     </modules>
 
     <name>util</name>
