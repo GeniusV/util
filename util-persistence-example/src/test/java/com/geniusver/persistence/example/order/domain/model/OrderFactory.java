@@ -34,7 +34,11 @@ public class OrderFactory {
     }
 
     public static List<Order.ItemInfo> itemInfos(int n) {
-        return IntStream.range(0, n)
+        return itemInfos(0, n);
+    }
+
+    public static List<Order.ItemInfo> itemInfos(int startInclude, int endExclude) {
+        return IntStream.range(startInclude, endExclude)
                 .mapToObj(i -> itemInfo(i + 1))
                 .collect(Collectors.toList());
     }

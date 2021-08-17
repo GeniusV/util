@@ -19,6 +19,7 @@ import com.geniusver.persistence.example.common.Default;
 import com.geniusver.persistence.example.order.domain.external.ProductInfo;
 import com.geniusver.persistence.example.order.domain.external.ProductInfoService;
 import lombok.*;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors;
  *
  * @author GeniusV
  */
+@Slf4j
 @Builder
 @Getter
 @AllArgsConstructor
@@ -102,7 +104,7 @@ public class Order implements Entity {
             if (existItem == null) {
                 return;
             }
-            existItem.updateQuantity(itemInfo.getQuantity());
+            existItem.updateQuantity(itemInfo.getQuantity() + 1);
         });
     }
 
@@ -115,6 +117,7 @@ public class Order implements Entity {
     private List<OrderItem> buildOrderItems(List<ItemInfo> itemInfos, Map<ProductId, ProductInfo> productInfoMap) {
         return itemInfos.stream().map(item -> {
             ProductInfo productInfo = productInfoMap.get(item.getProductId());
+            Assert.notNull(productInfo, "product info for item {} not exist");
             OrderItem orderItem = OrderItem.builder()
                     .productId(item.productId)
                     .itemName(productInfo.getProductName())

@@ -60,6 +60,7 @@ class OrderTest {
     @Test
     void isValidWithNullOrderItems() {
         Order order = emptyOrder().orderItems(null).build();
+
         assertThrows(IllegalArgumentException.class, order::validate);
     }
 
@@ -100,18 +101,37 @@ class OrderTest {
     }
 
     @Test
+    void orderSameItemTwice() {
+        ProductInfoService productInfoService = Mockito.mock(ProductInfoService.class);
+        Order order = emptyOrder()
+                .orderItems(new ArrayList<>(Arrays.asList(orderItem1().build())))
+                .build();
+        order = new EntityLogger().enhance(order);
+
+        when(productInfoService.getProductInfos(anyList()))
+                .thenReturn(ProductInfoFactory.productInfoList(5));
+
+        order.orderItems(itemInfos(1), productInfoService);
+
+        assertEquals(1, order.getOrderItems().size());
+        assertEquals(2, order.getOrderItems().get(0).getQuantity());
+        assertEquals(200, order.getPrice());
+    }
+
+    @Test
     void orderItemWithExistingItems() {
         ProductInfoService productInfoService = Mockito.mock(ProductInfoService.class);
         Order order = emptyOrder()
                 .orderItems(new ArrayList<>(Arrays.asList(orderItem1().build())))
                 .build();
 
-        when(productInfoService.getProductInfos(anyList())).thenReturn(ProductInfoFactory.productInfoList(2));
+        when(productInfoService.getProductInfos(anyList()))
+                .thenReturn(ProductInfoFactory.productInfoList(5));
 
-        order.orderItems(itemInfos(2), productInfoService);
+        order.orderItems(itemInfos(2, 3), productInfoService);
 
-        assertEquals(3, order.getOrderItems().size());
-        assertEquals(301, order.getPrice());
+        assertEquals(2, order.getOrderItems().size());
+        assertEquals(202, order.getPrice());
     }
 
     @Test
