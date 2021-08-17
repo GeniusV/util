@@ -2,7 +2,17 @@
 
 Contains useful utils from work and other projects.
 
-## Arthas Util
+## util-core
+
+Contains useful utils:
+
+- Package `com.geniusver.persitence`: DDD persistence helper to compare and get entity changes.
+- `LocalObjectStorage`: local file system based topic-key-value like object storage. Convenient for personal automation
+  projects thanks good readiness.
+- `RetryHandler`: Retry operation if any exception thrown with specific retry times and intervals. `RetryHandler` is
+  also capable of executing fallback logic if all retries fails.
+
+## util-arthas
 
 Can directly run arthas command in unit tests.
 
@@ -17,6 +27,10 @@ arthasBootJarPath=../arthas-boot.jar
 # buffer size to read and process arthas output
 bufferSize=8192
 ```
+
+## util-persistence-example
+
+An example module shows how to use `com.geniusver.persitence`.
 
 ## Test
 
