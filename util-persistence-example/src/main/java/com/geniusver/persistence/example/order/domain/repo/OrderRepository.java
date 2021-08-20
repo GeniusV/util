@@ -14,6 +14,7 @@
 package com.geniusver.persistence.example.order.domain.repo;
 
 import com.geniusver.persistence.Aggregate;
+import com.geniusver.persistence.Repository;
 import com.geniusver.persistence.example.order.domain.model.Order;
 
 /**
@@ -21,7 +22,7 @@ import com.geniusver.persistence.example.order.domain.model.Order;
  *
  * @author GeniusV
  */
-public interface OrderRepository {
+public interface OrderRepository extends Repository<Order.OrderId, Order> {
     long INIT_VERSION = 0L;
 
     Aggregate<Order> createAggregate(Order order);

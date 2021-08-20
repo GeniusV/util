@@ -25,5 +25,5 @@ public interface Repository<ID, E extends Entity> {
 
     void save(Aggregate<E> aggregate);
 
-    void remove(Aggregate<E> aggregate);
+    void remove(ID id);
 }

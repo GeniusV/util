@@ -16,6 +16,7 @@ package com.geniusver.persistence.example.order.domain.model;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.geniusver.persistence.example.common.Default;
+import com.geniusver.persistence.example.order.domain.external.ProductInfo;
 import lombok.*;
 
 /**
@@ -53,6 +54,14 @@ public class OrderItem {
 
     public long calculatePrice() {
         return price * quantity;
+    }
+
+    public void updateProductInfo(ProductInfo productInfo) {
+        Assert.notNull(productInfo);
+        Assert.isTrue(productInfo.getProductId().equals(this.productId));
+
+        this.itemName = productInfo.getProductName();
+        this.price = productInfo.getPrice();
     }
 
     public void updateVersion(long version) {
