@@ -92,6 +92,30 @@ public class Order implements Entity {
         return this;
     }
 
+    public Order orderItems(List<ItemInfo> inputItemInfos, List<ProductInfo> productInfos) {
+        Assert.notEmpty(inputItemInfos);
+        Assert.notEmpty(productInfos);
+        inputItemInfos.forEach(ItemInfo::validate);
+
+        Map<ProductId, OrderItem> existItemMap = this.orderItems.stream().collect(Collectors.toMap(OrderItem::getProductId, item -> item));
+
+        increaseQuantityForExistingProduct(existItemMap, inputItemInfos);
+
+        List<ItemInfo> newItemInfos = findNewItemInfos(existItemMap, inputItemInfos);
+
+        // product id -> productInfo
+        Map<ProductId, ProductInfo> productInfoMap = toMap(productInfos);
+
+        // build orderItems based on product info and requested quantity
+        List<OrderItem> newOrderItems = buildOrderItems(newItemInfos, productInfoMap);
+
+        this.orderItems.addAll(newOrderItems);
+
+        calculatePrice();
+
+        return this;
+    }
+
     private List<ItemInfo> findNewItemInfos(Map<ProductId, OrderItem> existItemMap, List<ItemInfo> inputItemInfos) {
         return inputItemInfos.stream()
                 .filter(itemInfo -> existItemMap.get(itemInfo.getProductId()) == null)

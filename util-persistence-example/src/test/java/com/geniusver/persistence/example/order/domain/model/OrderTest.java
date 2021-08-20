@@ -14,9 +14,7 @@
 package com.geniusver.persistence.example.order.domain.model;
 
 import com.geniusver.persistence.example.order.domain.external.ProductInfoFactory;
-import com.geniusver.persistence.example.order.domain.external.ProductInfoService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,9 +23,6 @@ import static com.geniusver.persistence.example.order.domain.model.OrderFactory.
 import static com.geniusver.persistence.example.order.domain.model.OrderFactory.itemInfos;
 import static com.geniusver.persistence.example.order.domain.model.OrderItemFactory.orderItem1;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.when;
 
 /**
  * OrderTest
@@ -89,12 +84,9 @@ class OrderTest {
 
     @Test
     void orderItems() {
-        ProductInfoService productInfoService = Mockito.mock(ProductInfoService.class);
         Order order = emptyOrder().build();
 
-        when(productInfoService.getProductInfos(anyList())).thenReturn(ProductInfoFactory.productInfoList(2));
-
-        order.orderItems(itemInfos(2), productInfoService);
+        order.orderItems(itemInfos(2), ProductInfoFactory.productInfoList(2));
 
         assertEquals(2, order.getOrderItems().size());
         assertEquals(201, order.getPrice());
@@ -102,16 +94,12 @@ class OrderTest {
 
     @Test
     void orderSameItemTwice() {
-        ProductInfoService productInfoService = Mockito.mock(ProductInfoService.class);
         Order order = emptyOrder()
                 .orderItems(new ArrayList<>(Arrays.asList(orderItem1().build())))
                 .build();
         order = new EntityLogger().enhance(order);
 
-        when(productInfoService.getProductInfos(anyList()))
-                .thenReturn(ProductInfoFactory.productInfoList(5));
-
-        order.orderItems(itemInfos(1), productInfoService);
+        order.orderItems(itemInfos(1), ProductInfoFactory.productInfoList(5));
 
         assertEquals(1, order.getOrderItems().size());
         assertEquals(2, order.getOrderItems().get(0).getQuantity());
@@ -120,15 +108,11 @@ class OrderTest {
 
     @Test
     void orderItemWithExistingItems() {
-        ProductInfoService productInfoService = Mockito.mock(ProductInfoService.class);
         Order order = emptyOrder()
                 .orderItems(new ArrayList<>(Arrays.asList(orderItem1().build())))
                 .build();
 
-        when(productInfoService.getProductInfos(anyList()))
-                .thenReturn(ProductInfoFactory.productInfoList(5));
-
-        order.orderItems(itemInfos(2, 3), productInfoService);
+        order.orderItems(itemInfos(2, 3), ProductInfoFactory.productInfoList(5));
 
         assertEquals(2, order.getOrderItems().size());
         assertEquals(202, order.getPrice());
@@ -136,50 +120,30 @@ class OrderTest {
 
     @Test
     void orderItemsWithEmptyList() {
-        ProductInfoService productInfoService = Mockito.mock(ProductInfoService.class);
         Order order = emptyOrder()
                 .orderItems(new ArrayList<>(Arrays.asList(orderItem1().build())))
                 .build();
 
-        when(productInfoService.getProductInfos(anyList())).thenReturn(ProductInfoFactory.productInfoList(2));
-
         assertThrows(IllegalArgumentException.class, () ->
-                order.orderItems(new ArrayList<>(), productInfoService));
+                order.orderItems(new ArrayList<>(), ProductInfoFactory.productInfoList(2)));
 
     }
 
-    @Test
-    void orderItemsWithInvalidProductId() {
-        ProductInfoService productInfoService = Mockito.mock(ProductInfoService.class);
-        Order order = emptyOrder().build();
-
-        when(productInfoService.getProductInfos(argThat(productIdList -> productIdList.contains(-1L))))
-                .thenThrow(new IllegalArgumentException());
-
-
-        assertThrows(IllegalArgumentException.class, () ->
-                order.orderItems(Arrays.asList(
-                        new Order.ItemInfo(new ProductId(-1L), 1),
-                        new Order.ItemInfo(new ProductId(2L), 1)), productInfoService));
-    }
 
     @Test
     void orderItemsWithInvalidQuantity() {
-        ProductInfoService productInfoService = Mockito.mock(ProductInfoService.class);
         Order order = emptyOrder().build();
-
-        when(productInfoService.getProductInfos(anyList())).thenReturn(ProductInfoFactory.productInfoList(2));
 
         assertThrows(IllegalArgumentException.class, () ->
                 order.orderItems(Arrays.asList(
                         new Order.ItemInfo(new ProductId(1L), -1),
-                        new Order.ItemInfo(new ProductId(2L), 1)), productInfoService));
+                        new Order.ItemInfo(new ProductId(2L), 1)), ProductInfoFactory.productInfoList(2)));
 
 
         assertThrows(IllegalArgumentException.class, () ->
                 order.orderItems(Arrays.asList(
                         new Order.ItemInfo(new ProductId(1L), 0),
-                        new Order.ItemInfo(new ProductId(2L), 1)), productInfoService));
+                        new Order.ItemInfo(new ProductId(2L), 1)), ProductInfoFactory.productInfoList(2)));
     }
 
     @Test

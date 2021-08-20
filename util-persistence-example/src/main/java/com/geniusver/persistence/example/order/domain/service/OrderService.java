@@ -14,12 +14,14 @@
 package com.geniusver.persistence.example.order.domain.service;
 
 import cn.hutool.core.lang.Assert;
+import com.geniusver.persistence.example.order.domain.external.ProductInfo;
 import com.geniusver.persistence.example.order.domain.external.ProductInfoService;
 import com.geniusver.persistence.example.order.domain.external.UserService;
 import com.geniusver.persistence.example.order.domain.model.Order;
 import com.geniusver.persistence.example.order.domain.model.UserId;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * OrderService
@@ -41,6 +43,7 @@ public class OrderService {
     public Order orderItems(Order order, List<Order.ItemInfo> items) {
         Assert.notNull(order);
         Assert.notEmpty(items);
-        return order.orderItems(items, productInfoService);
+        List<ProductInfo> productInfos = productInfoService.getProductInfos(items.stream().map(Order.ItemInfo::getProductId).collect(Collectors.toList()));
+        return order.orderItems(items, productInfos);
     }
 }
