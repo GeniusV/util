@@ -17,7 +17,6 @@ import cn.hutool.core.lang.Assert;
 import com.geniusver.persistence.Entity;
 import com.geniusver.persistence.example.common.Default;
 import com.geniusver.persistence.example.order.domain.external.ProductInfo;
-import com.geniusver.persistence.example.order.domain.external.ProductInfoService;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,33 +61,6 @@ public class Order implements Entity {
         Assert.isTrue(item.validate());
         orderItems.add(item);
         calculatePrice();
-        return this;
-    }
-
-    public Order orderItems(List<ItemInfo> inputItemInfos, ProductInfoService productInfoService) {
-        Assert.notEmpty(inputItemInfos);
-        inputItemInfos.forEach(ItemInfo::validate);
-        Assert.notNull(productInfoService);
-
-        Map<ProductId, OrderItem> existItemMap = this.orderItems.stream().collect(Collectors.toMap(OrderItem::getProductId, item -> item));
-
-        increaseQuantityForExistingProduct(existItemMap, inputItemInfos);
-
-        List<ItemInfo> newItemInfos = findNewItemInfos(existItemMap, inputItemInfos);
-
-        // query all product info in request
-        List<ProductInfo> productInfos = productInfoService.getProductInfos(extractProductIds(newItemInfos));
-
-        // product id -> productInfo
-        Map<ProductId, ProductInfo> productInfoMap = toMap(productInfos);
-
-        // build orderItems based on product info and requested quantity
-        List<OrderItem> newOrderItems = buildOrderItems(newItemInfos, productInfoMap);
-
-        this.orderItems.addAll(newOrderItems);
-
-        calculatePrice();
-
         return this;
     }
 
