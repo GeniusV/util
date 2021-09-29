@@ -8,13 +8,28 @@ import java.util.function.Function;
 
 /**
  * ConcurrencyTester
+ * <p>
+ * Example:
+ * <pre><code>
+ *     new ConcurrentTester()
+ *         .addWorker(2, integer -> "test1-" + integer, () -> System.out.println(Thread.currentThread().getName()))
+ *         .addWorker(3, integer -> "test7-" + integer, () -> System.out.println(Thread.currentThread().getName()))
+ *         .start();
+ * </code></pre>
  *
  * @author GeniusV
  */
 public class ConcurrentTester {
     private final List<Task> taskList = new ArrayList<>();
 
-
+    /**
+     * Add test logic
+     *
+     * @param num                thread number
+     * @param threadNameFunction function to get thread name, the integer is thread index.
+     * @param runnable           runnable
+     * @return ConcurrentTester
+     */
     public ConcurrentTester addWorker(int num, Function<Integer, String> threadNameFunction, Runnable runnable) {
         if (num < 1) {
             throw new IllegalArgumentException("num must >= 1");
@@ -29,7 +44,15 @@ public class ConcurrentTester {
         return this;
     }
 
+    /**
+     * Start tests.
+     *
+     * @throws InterruptedRuntimeException throw if thread is interrupted when waiting for work thread complete.
+     */
     public void start() {
+        if (taskList.isEmpty()) {
+            return;
+        }
         int totalThreadNum = taskList.stream().mapToInt(task -> task.num).sum();
         CyclicBarrier barrier = new CyclicBarrier(totalThreadNum);
         CountDownLatch countDownLatch = new CountDownLatch(totalThreadNum);
@@ -43,7 +66,7 @@ public class ConcurrentTester {
         try {
             countDownLatch.await();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            throw new InterruptedRuntimeException(e);
         }
     }
 
