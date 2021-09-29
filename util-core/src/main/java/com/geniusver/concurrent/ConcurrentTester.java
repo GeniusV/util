@@ -1,5 +1,7 @@
 package com.geniusver.concurrent;
 
+import cn.hutool.core.lang.Assert;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -31,15 +33,9 @@ public class ConcurrentTester {
      * @return ConcurrentTester
      */
     public ConcurrentTester addWorker(int num, Function<Integer, String> threadNameFunction, Runnable runnable) {
-        if (num < 1) {
-            throw new IllegalArgumentException("num must >= 1");
-        }
-        if (threadNameFunction == null) {
-            throw new IllegalArgumentException("threadNameFunction must not be null");
-        }
-        if (runnable == null) {
-            throw new IllegalArgumentException("runnable must not be null");
-        }
+        Assert.isTrue(num >= 1, "num must >= 1");
+        Assert.notNull(threadNameFunction, "threadNameFunction must not be null");
+        Assert.notNull(runnable, "runnable must not be null");
         taskList.add(new Task(num, threadNameFunction, runnable));
         return this;
     }
