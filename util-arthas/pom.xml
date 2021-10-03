@@ -21,7 +21,7 @@
     <parent>
         <artifactId>util</artifactId>
         <groupId>com.geniusver</groupId>
-        <version>0.1.0</version>
+        <version>${revision}</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
