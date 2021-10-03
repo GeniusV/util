@@ -53,6 +53,7 @@
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
         <revision>0.1.1</revision>
+        <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
 
     <dependencies>

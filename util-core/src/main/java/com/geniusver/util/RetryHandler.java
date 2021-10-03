@@ -24,9 +24,10 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 /**
- * RetryHandler <p>
- * <p>
- * Example: <code><pre>
+ * RetryHandler
+ * Example:
+ * <pre>
+ * {@code
  * RetryHandler<Integer, String> rh = new RetryHandler<Integer, String>(3, 1000L)
  *             .doTry(i -> {
  *                 return "1";
@@ -38,7 +39,8 @@ import java.util.function.Function;
  *                 return "2";
  *             });
  * String res = rh.handle(1);
- * </pre></code>
+ * }
+ * </pre>
  * <p>
  * If doTry lambda throws an exception, the exception can be handled in doCatch lambda.
  * Then current thread will sleep 1000ms and re-execute doTry lambda up to 3 time(total execute 4 times).
