@@ -30,8 +30,10 @@ public interface ProductInfoService {
      * @param productIdList productIdList
      * @return list contains productInfo
      * @throws IllegalArgumentException if:
-     *                                  <li>productIdList is null or contains no element</li>
-     *                                  <li>one of given productIdList not exist</li>
+     * <ul>
+     * <li>productIdList is null or contains no element</li>
+     * <li>one of given productIdList not exist</li>
+     * </ul>
      */
     List<ProductInfo> getProductInfos(List<ProductId> productIdList) throws IllegalArgumentException;
 }
