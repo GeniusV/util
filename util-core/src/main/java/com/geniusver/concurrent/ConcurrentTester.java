@@ -14,6 +14,12 @@ import java.util.function.Function;
  * Example:
  * <pre><code>
  *     new ConcurrentTester()
+ *         .addWorker(2, () -> System.out.println(Thread.currentThread().getName()))
+ *         .addWorker(3, () -> System.out.println(Thread.currentThread().getName()))
+ *         .start();
+ * </code></pre>
+ * <pre><code>
+ *     new ConcurrentTester()
  *         .addWorker(2, integer -> "test1-" + integer, () -> System.out.println(Thread.currentThread().getName()))
  *         .addWorker(3, integer -> "test7-" + integer, () -> System.out.println(Thread.currentThread().getName()))
  *         .start();
@@ -23,6 +29,7 @@ import java.util.function.Function;
  */
 public class ConcurrentTester {
     private final List<Task> taskList = new ArrayList<>();
+    public static final Function<Integer, String> DEFAULT_THREAD_NAME_FACTORY = i -> "tester-" + i;
 
     /**
      * Add test logic
@@ -38,6 +45,17 @@ public class ConcurrentTester {
         Assert.notNull(runnable, "runnable must not be null");
         taskList.add(new Task(num, threadNameFunction, runnable));
         return this;
+    }
+
+    /**
+     * Add test login
+     *
+     * @param num      thread number
+     * @param runnable runnable
+     * @return ConcurrentTester
+     */
+    public ConcurrentTester addWorker(int num, Runnable runnable) {
+        return this.addWorker(num, DEFAULT_THREAD_NAME_FACTORY, runnable);
     }
 
     /**

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
  * @author GeniusV
  */
 class ConcurrentTesterTest {
+
     @Test
     void test() {
         new ConcurrentTester()
@@ -18,6 +19,19 @@ class ConcurrentTesterTest {
                 .addWorker(3, integer -> "test5-" + integer, () -> System.out.println(Thread.currentThread().getName()))
                 .addWorker(3, integer -> "test6-" + integer, () -> System.out.println(Thread.currentThread().getName()))
                 .addWorker(3, integer -> "test7-" + integer, () -> System.out.println(Thread.currentThread().getName()))
+                .start();
+    }
+
+    @Test
+    void test2() {
+        new ConcurrentTester()
+                .addWorker(3, () -> System.out.println(Thread.currentThread().getName()))
+                .addWorker(3, () -> System.out.println(Thread.currentThread().getName()))
+                .addWorker(3, () -> System.out.println(Thread.currentThread().getName()))
+                .addWorker(3, () -> System.out.println(Thread.currentThread().getName()))
+                .addWorker(3, () -> System.out.println(Thread.currentThread().getName()))
+                .addWorker(3, () -> System.out.println(Thread.currentThread().getName()))
+                .addWorker(3, () -> System.out.println(Thread.currentThread().getName()))
                 .start();
     }
 }
