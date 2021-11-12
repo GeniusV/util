@@ -23,7 +23,7 @@
     <groupId>com.geniusver</groupId>
     <artifactId>util</artifactId>
     <packaging>pom</packaging>
-    <version>${revision}</version>
+    <version>0.1.2-SNAPSHOT</version>
     <modules>
         <module>util-arthas</module>
         <module>util-core</module>
@@ -52,7 +52,6 @@
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>utf-8</project.reporting.outputEncoding>
-        <revision>0.1.2-SNAPSHOT</revision>
         <additionalparam>-Xdoclint:none</additionalparam>
     </properties>
 
