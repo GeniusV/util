@@ -55,4 +55,12 @@ In Intellij IDEA, unit tests and integration tests can be configured separately.
 Note, in above configuration, unit tests will not be trigger when run integration tests. If you want to run integration
 tests and unit tests together like maven, just run all tests.
 
+## Development
 
+### Install To Local Repository
+
+By default, a gpg is required to sign the package so that can deploy to snapshot repository. You can disable this by:
+
+```bash
+mvn clean install -DskipTests -P !default
+```
