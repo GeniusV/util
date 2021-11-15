@@ -10,10 +10,20 @@ import java.util.Map;
  *
  * @author GeniusV
  */
+
+// TODO: 11/15/2021
 public class DataObjectStore {
     private Map<Class, ClassBin> classBinMap = new HashMap<>();
 
-    public void put(Object object, Class clazz, Object id) {
+    public void put(Object object) {
+
+    }
+
+    public <T> T get(Object id, Class<T> type) {
+        return null;
+    }
+
+    private void put(Object object, Class clazz, Object id) {
         Assert.notNull(object);
         Assert.notNull(clazz);
         Assert.notNull(id);

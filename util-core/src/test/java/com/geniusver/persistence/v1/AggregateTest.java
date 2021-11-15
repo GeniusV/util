@@ -11,14 +11,12 @@
  * Copyright 2012-2021 the original author or authors.
  */
 
-package com.geniusver.persistence;
+package com.geniusver.persistence.v1;
 
 
 import com.geniusver.persistence.complex_object.*;
 import com.geniusver.persistence.deepcompare.JavaUtilDeepComparator;
 import com.geniusver.persistence.impl.KryoDeepCopier;
-import com.geniusver.persistence.v1.Aggregate;
-import com.geniusver.persistence.v1.AggregateFactory;
 import org.junit.Before;
 import org.junit.Test;
 

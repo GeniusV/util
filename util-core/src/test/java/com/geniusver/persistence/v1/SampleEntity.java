@@ -11,9 +11,7 @@
  * Copyright 2012-2021 the original author or authors.
  */
 
-package com.geniusver.persistence;
-
-import com.geniusver.persistence.v1.Entity;
+package com.geniusver.persistence.v1;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

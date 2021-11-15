@@ -11,12 +11,9 @@
  * Copyright 2012-2021 the original author or authors.
  */
 
-package com.geniusver.persistence;
+package com.geniusver.persistence.v1;
 
 import com.geniusver.persistence.deepcompare.DataObjectUtil;
-import com.geniusver.persistence.v1.Aggregate;
-import com.geniusver.persistence.v1.AggregateFactory;
-import com.geniusver.persistence.v1.ChangedEntity;
 
 import java.util.Collection;
 
