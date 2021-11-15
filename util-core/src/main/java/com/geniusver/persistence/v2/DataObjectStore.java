@@ -3,7 +3,9 @@ package com.geniusver.persistence.v2;
 import cn.hutool.core.lang.Assert;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * DataObjectStore
@@ -15,12 +17,21 @@ import java.util.Map;
 public class DataObjectStore {
     private Map<Class, ClassBin> classBinMap = new HashMap<>();
 
-    public void put(Object object) {
-
-    }
-
     public <T> T get(Object id, Class<T> type) {
         return null;
+    }
+
+    public <T> List<T> getList(Class<T> type) {
+        return null;
+    }
+
+
+    public void put(Object object, Class clazz, Function<Object, Object> idFunction) {
+        Assert.notNull(object);
+        Assert.notNull(clazz);
+        Assert.notNull(idFunction);
+
+        // if object is collection, for each save
     }
 
     private void put(Object object, Class clazz, Object id) {
