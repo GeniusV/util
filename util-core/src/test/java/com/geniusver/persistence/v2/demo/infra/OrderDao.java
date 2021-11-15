@@ -6,4 +6,5 @@ package com.geniusver.persistence.v2.demo.infra;
  * @author GeniusV
  */
 public interface OrderDao {
+    OrderDo query(Long value);
 }
