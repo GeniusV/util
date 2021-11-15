@@ -9,7 +9,7 @@ import com.geniusver.persistence.v2.CompareResult;
 import com.geniusver.persistence.v2.CompareUtil;
 import com.geniusver.persistence.v2.Repository;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -42,8 +42,8 @@ public class OrderRepository implements Repository<OrderId, Order> {
         List<OrderItemDo> orderItemDoList;
 
         CompareResult<OrderDo> orderDoResult = CompareUtil.compare(aggregate.getOldDataObjectStore().getList(OrderDo.class),
-                Arrays.asList(orderDo),
-                obj -> obj.getId());
+                Collections.singletonList(orderDo),
+                OrderDo::getId);
 
         List<OrderDo> toInsertList = orderDoResult.toInsertList();
         List<OrderDo> toUpdateList = orderDoResult.toUpdateList();
