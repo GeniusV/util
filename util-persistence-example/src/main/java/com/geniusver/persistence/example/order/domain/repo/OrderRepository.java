@@ -13,9 +13,9 @@
 
 package com.geniusver.persistence.example.order.domain.repo;
 
-import com.geniusver.persistence.Aggregate;
-import com.geniusver.persistence.Repository;
 import com.geniusver.persistence.example.order.domain.model.Order;
+import com.geniusver.persistence.v1.Aggregate;
+import com.geniusver.persistence.v1.Repository;
 
 /**
  * OrderRepository

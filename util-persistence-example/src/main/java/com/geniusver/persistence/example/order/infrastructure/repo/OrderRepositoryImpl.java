@@ -14,11 +14,11 @@
 package com.geniusver.persistence.example.order.infrastructure.repo;
 
 
-import com.geniusver.persistence.Aggregate;
-import com.geniusver.persistence.AggregateFactory;
 import com.geniusver.persistence.example.order.domain.model.Order;
 import com.geniusver.persistence.example.order.domain.model.OrderItem;
 import com.geniusver.persistence.example.order.domain.repo.OrderRepository;
+import com.geniusver.persistence.v1.Aggregate;
+import com.geniusver.persistence.v1.AggregateFactory;
 
 import java.util.Collection;
 

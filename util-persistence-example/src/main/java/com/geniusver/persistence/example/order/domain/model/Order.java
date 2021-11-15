@@ -14,9 +14,9 @@
 package com.geniusver.persistence.example.order.domain.model;
 
 import cn.hutool.core.lang.Assert;
-import com.geniusver.persistence.Entity;
 import com.geniusver.persistence.example.common.Default;
 import com.geniusver.persistence.example.order.domain.external.ProductInfo;
+import com.geniusver.persistence.v1.Entity;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 

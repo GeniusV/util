@@ -13,6 +13,8 @@
 
 package com.geniusver.persistence;
 
+import com.geniusver.persistence.v1.Entity;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;

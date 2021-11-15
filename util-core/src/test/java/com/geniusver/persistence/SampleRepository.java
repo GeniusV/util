@@ -14,6 +14,9 @@
 package com.geniusver.persistence;
 
 import com.geniusver.persistence.deepcompare.DataObjectUtil;
+import com.geniusver.persistence.v1.Aggregate;
+import com.geniusver.persistence.v1.AggregateFactory;
+import com.geniusver.persistence.v1.ChangedEntity;
 
 import java.util.Collection;
 

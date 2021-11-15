@@ -11,30 +11,19 @@
  * Copyright 2012-2021 the original author or authors.
  */
 
-package com.geniusver.persistence;
+package com.geniusver.persistence.v1;
 
 /**
- * ChangedEntity
+ * BasicRepository
  *
- * @author meixuesong
  * @author GeniusV
  */
-public class ChangedEntity<T> {
+public interface Repository<ID, E extends Entity> {
+    Aggregate<E> createAggregate(E entity);
 
-    private final T oldEntity;
-    private final T newEntity;
+    Aggregate<E> find(ID id);
 
-    public ChangedEntity(T oldEntity, T newEntity) {
+    void save(Aggregate<E> aggregate);
 
-        this.oldEntity = oldEntity;
-        this.newEntity = newEntity;
-    }
-
-    public T getOldEntity() {
-        return oldEntity;
-    }
-
-    public T getNewEntity() {
-        return newEntity;
-    }
+    void remove(ID id);
 }

@@ -11,8 +11,9 @@
  * Copyright 2012-2021 the original author or authors.
  */
 
-package com.geniusver.persistence;
+package com.geniusver.persistence.v1;
 
+import com.geniusver.persistence.DeepCopier;
 import com.geniusver.persistence.deepcompare.JavaUtilDeepComparator;
 import com.geniusver.persistence.impl.KryoDeepCopier;
 

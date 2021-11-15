@@ -11,16 +11,18 @@
  * Copyright 2012-2021 the original author or authors.
  */
 
-package com.geniusver.persistence;
+package com.geniusver.persistence.v1;
 
 /**
- * The aggregate use version to manage optimistic lock
+ * BasicRepository
  *
- * @author meixuesong
  * @author GeniusV
  */
-public interface Entity {
-    default <V> V getVersion() {
-        return null;
-    }
+public interface BasicRepository<E extends Entity> {
+
+    <ID> E find(ID id);
+
+    void save(E aggregate);
+
+    void remove(E aggregate);
 }

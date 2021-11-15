@@ -11,8 +11,11 @@
  * Copyright 2012-2021 the original author or authors.
  */
 
-package com.geniusver.persistence;
+package com.geniusver.persistence.v1;
 
+
+import com.geniusver.persistence.DeepComparator;
+import com.geniusver.persistence.DeepCopier;
 
 public class VersionalAggregate<R extends Entity, V> extends Aggregate<R> {
     protected V version;

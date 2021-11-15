@@ -14,8 +14,6 @@
 package com.geniusver.persistence.example.order.application.impl;
 
 
-import com.geniusver.persistence.Aggregate;
-import com.geniusver.persistence.AggregateFactory;
 import com.geniusver.persistence.example.order.application.ItemDetail;
 import com.geniusver.persistence.example.order.application.NewOrderCommand;
 import com.geniusver.persistence.example.order.application.OrderDto;
@@ -24,6 +22,8 @@ import com.geniusver.persistence.example.order.domain.model.OrderFactory;
 import com.geniusver.persistence.example.order.domain.model.UserId;
 import com.geniusver.persistence.example.order.domain.repo.OrderRepository;
 import com.geniusver.persistence.example.order.domain.service.OrderService;
+import com.geniusver.persistence.v1.Aggregate;
+import com.geniusver.persistence.v1.AggregateFactory;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

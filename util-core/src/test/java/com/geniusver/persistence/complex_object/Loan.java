@@ -13,7 +13,7 @@
 
 package com.geniusver.persistence.complex_object;
 
-import com.geniusver.persistence.Entity;
+import com.geniusver.persistence.v1.Entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
