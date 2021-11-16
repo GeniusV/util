@@ -13,9 +13,11 @@ import java.util.function.Function;
 public class DataObjectContext {
     private Map<Class, ClassBin> classBinMap = new HashMap<>();
 
+    @SuppressWarnings("unchecked")
     public <T> T get(Object id, Class<T> type) {
-        // TODO: 11/16/2021
-        return null;
+        return (T) Optional.ofNullable(classBinMap.get(type))
+                .map(classBin -> classBin.get(id))
+                .orElse(null);
     }
 
     @SuppressWarnings("unchecked")
