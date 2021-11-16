@@ -2,9 +2,7 @@ package com.geniusver.persistence.v2;
 
 import cn.hutool.core.lang.Assert;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -12,38 +10,54 @@ import java.util.function.Function;
  *
  * @author GeniusV
  */
-
-// TODO: 11/15/2021
 public class DataObjectContext {
     private Map<Class, ClassBin> classBinMap = new HashMap<>();
 
     public <T> T get(Object id, Class<T> type) {
+        // TODO: 11/16/2021
         return null;
     }
 
-    public <T> List<T> getList(Class<T> type) {
-        return null;
+    @SuppressWarnings("unchecked")
+    public <T> Collection<T> getAll(Class<T> type) {
+        return Optional.ofNullable(classBinMap.get(type))
+                .map(ClassBin::getObjects)
+                .orElse(Collections.emptyList());
     }
 
+    public <T> void put(T dataObject, Class<T> clazz, Function<T, Object> idFunction) {
+        Assert.notNull(dataObject, "data object cannot be null");
+        Assert.notNull(clazz, "class cannot be null");
+        Assert.notNull(idFunction, "id function cannot be null");
 
-    public <T> void put(Object object, Class<T> clazz, Function<T, Object> idFunction) {
-        Assert.notNull(object);
-        Assert.notNull(clazz);
-        Assert.notNull(idFunction);
-
-        // if object is collection, for each save
+        put(dataObject, clazz, idFunction.apply(dataObject));
     }
 
-    private void put(Object object, Class clazz, Object id) {
-        Assert.notNull(object);
-        Assert.notNull(clazz);
-        Assert.notNull(id);
+    public <T> void put(Collection<T> objectList, Class<T> clazz, Function<T, Object> idFunction) {
+        Assert.notNull(objectList, "data object list cannot be null");
+        Assert.notNull(clazz, "class cannot be null");
+        Assert.notNull(idFunction, "id function cannot be null");
+        objectList.forEach(dataObject -> put(dataObject, clazz, idFunction.apply(dataObject)));
+    }
+
+    private void put(Object dataObject, Class clazz, Object id) {
+        Assert.notNull(dataObject, "data object cannot be null");
+        Assert.notNull(clazz, "class cannot be null");
+        Assert.notNull(id, "id cannot be null");
+
+        ClassBin classBin = classBinMap.get(clazz);
+        if (classBin == null) {
+            classBin = new ClassBin(clazz);
+            classBinMap.put(clazz, classBin);
+        }
+
+        classBin.put(id, dataObject);
     }
 
 
     private class ClassBin<T> {
         private Class<T> type;
-        private Map<Object, T> objectMap;
+        private Map<Object, T> objectMap = new HashMap<>();
 
         public ClassBin(Class<T> type) {
             Assert.notNull(type);
@@ -61,6 +75,10 @@ public class DataObjectContext {
         public T get(Object id) {
             Assert.notNull(id);
             return objectMap.get(id);
+        }
+
+        public Collection<T> getObjects() {
+            return objectMap.values();
         }
     }
 }
