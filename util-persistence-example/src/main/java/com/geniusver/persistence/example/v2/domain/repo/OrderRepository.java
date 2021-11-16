@@ -67,9 +67,9 @@ public class OrderRepository implements Repository<OrderId, Order> {
             OrderItemDo inserted = orderItemDao.insert(toInsert);
             aggregate.getDataObjectContext().put(inserted, OrderItemDo.class, OrderItemDo::getId);
         });
-        orderItemDoCompareResult.toInsertList().forEach(toInsert -> {
-            OrderItemDo inserted = orderItemDao.insert(toInsert);
-            aggregate.getDataObjectContext().put(inserted, OrderItemDo.class, OrderItemDo::getId);
+        orderItemDoCompareResult.toUpdateList().forEach(toInsert -> {
+            OrderItemDo updated = orderItemDao.update(toInsert);
+            aggregate.getDataObjectContext().put(updated, OrderItemDo.class, OrderItemDo::getId);
         });
     }
 
@@ -84,8 +84,8 @@ public class OrderRepository implements Repository<OrderId, Order> {
             aggregate.getDataObjectContext().put(inserted, OrderDo.class, OrderDo::getId);
         });
         orderDoResult.toUpdateList().forEach(obj -> {
-            OrderDo inserted = orderDao.insert(obj);
-            aggregate.getDataObjectContext().put(inserted, OrderDo.class, OrderDo::getId);
+            OrderDo updated = orderDao.update(obj);
+            aggregate.getDataObjectContext().put(updated, OrderDo.class, OrderDo::getId);
         });
     }
 

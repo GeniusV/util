@@ -7,7 +7,14 @@ package com.geniusver.persistence.v2;
  */
 public class Aggregate<R> {
     protected R root;
-    protected DataObjectContext dataObjectContext;
+    protected DataObjectContext dataObjectContext = new DataObjectContext();
+
+    public Aggregate() {
+    }
+
+    public Aggregate(R root) {
+        this.root = root;
+    }
 
     public R getRoot() {
         return root;
@@ -20,4 +27,6 @@ public class Aggregate<R> {
     public DataObjectContext getDataObjectContext() {
         return dataObjectContext;
     }
+
+
 }
