@@ -15,7 +15,6 @@ public class Order {
     private OrderId orderId;
     private UserId userId;
     private Long productId;
-    private Long version;
     private List<OrderItem> orderItems = new ArrayList<>();
-    private Long price = 0L;
+    private Money price;
 }

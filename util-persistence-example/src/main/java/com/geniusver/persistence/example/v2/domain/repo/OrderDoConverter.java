@@ -14,7 +14,7 @@ import org.mapstruct.factory.Mappers;
 public interface OrderDoConverter {
     OrderDoConverter INSTANCE = Mappers.getMapper(OrderDoConverter.class);
 
-    // TODO: 11/16/2021  
+    // TODO: 11/16/2021
     Order toOrder(OrderDo orderDo);
 
     OrderDo toOrderDo(Order order);
