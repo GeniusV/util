@@ -12,10 +12,9 @@ import java.math.BigDecimal;
 @Data
 public class OrderDo {
     private Long id;
-    private String itemName;
+    private Long userId;
     private BigDecimal price;
     private String currency;
     private Long productId;
-    private Integer quantity;
     private Long version;
 }

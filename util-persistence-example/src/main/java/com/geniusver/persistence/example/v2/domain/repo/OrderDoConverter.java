@@ -17,7 +17,11 @@ public interface OrderDoConverter {
     OrderDoConverter INSTANCE = Mappers.getMapper(OrderDoConverter.class);
 
     // TODO: 11/16/2021
+    @Mapping(source = "id", target = "id.value")
+    @Mapping(source = "userId", target = "userId.value")
+    @Mapping(source = "productId", target = "productId.value")
     @Mapping(source = "price", target = "price.amount")
+    @Mapping(source = "currency", target = "price.currency")
     Order toOrder(OrderDo orderDo);
 
     @InheritInverseConfiguration

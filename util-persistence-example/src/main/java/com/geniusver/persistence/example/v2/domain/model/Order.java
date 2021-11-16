@@ -12,9 +12,9 @@ import java.util.List;
  */
 @Data
 public class Order {
-    private OrderId orderId;
+    private OrderId id;
     private UserId userId;
-    private Long productId;
+    private ProductId productId;
     private List<OrderItem> orderItems = new ArrayList<>();
     private Money price;
 }
