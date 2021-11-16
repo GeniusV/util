@@ -27,19 +27,21 @@ public class DataObjectContext {
                 .orElse(Collections.emptyList());
     }
 
-    public <T> void put(T dataObject, Class<T> clazz, Function<T, Object> idFunction) {
+    public <T> DataObjectContext put(T dataObject, Class<T> clazz, Function<T, Object> idFunction) {
         Assert.notNull(dataObject, "data object cannot be null");
         Assert.notNull(clazz, "class cannot be null");
         Assert.notNull(idFunction, "id function cannot be null");
 
         put(dataObject, clazz, idFunction.apply(dataObject));
+        return this;
     }
 
-    public <T> void put(Collection<T> objectList, Class<T> clazz, Function<T, Object> idFunction) {
+    public <T> DataObjectContext put(Collection<T> objectList, Class<T> clazz, Function<T, Object> idFunction) {
         Assert.notNull(objectList, "data object list cannot be null");
         Assert.notNull(clazz, "class cannot be null");
         Assert.notNull(idFunction, "id function cannot be null");
         objectList.forEach(dataObject -> put(dataObject, clazz, idFunction.apply(dataObject)));
+        return this;
     }
 
     private void put(Object dataObject, Class clazz, Object id) {

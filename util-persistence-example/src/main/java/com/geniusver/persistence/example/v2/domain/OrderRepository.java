@@ -47,7 +47,7 @@ public class OrderRepository implements Repository<OrderId, Order> {
     }
 
     private void compareAndSaveOrderItemDo(Aggregate<Order> aggregate, List<OrderItemDo> orderItemDoList) {
-        CompareResult<OrderItemDo> orderItemDoCompareResult = CompareUtil.compare(aggregate.getDataObjectContext().getList(OrderItemDo.class),
+        CompareResult<OrderItemDo> orderItemDoCompareResult = CompareUtil.compare(aggregate.getDataObjectContext().getAll(OrderItemDo.class),
                 orderItemDoList,
                 OrderItemDo::getId);
 
@@ -62,7 +62,7 @@ public class OrderRepository implements Repository<OrderId, Order> {
     }
 
     private void compareAndSaveOrderDo(Aggregate<Order> aggregate, OrderDo orderDo) {
-        CompareResult<OrderDo> orderDoResult = CompareUtil.compare(aggregate.getDataObjectContext().getList(OrderDo.class),
+        CompareResult<OrderDo> orderDoResult = CompareUtil.compare(aggregate.getDataObjectContext().getAll(OrderDo.class),
                 Collections.singletonList(orderDo),
                 OrderDo::getId);
 
