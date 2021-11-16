@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
  * </code></pre>
  *
  * @param <R> The aggregate root type, such as Order
- * @author meixuesong
+ * @author meixuesongZ
  * @author GeniusV
  */
 public class Aggregate<R extends Entity> {

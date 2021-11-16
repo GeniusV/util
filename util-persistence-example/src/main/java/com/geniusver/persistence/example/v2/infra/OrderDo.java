@@ -2,6 +2,8 @@ package com.geniusver.persistence.example.v2.infra;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * OrderDo
  *
@@ -11,7 +13,8 @@ import lombok.Data;
 public class OrderDo {
     private Long id;
     private String itemName;
-    private Long price;
+    private BigDecimal price;
+    private String currency;
     private Long productId;
     private Integer quantity;
     private Long version;
