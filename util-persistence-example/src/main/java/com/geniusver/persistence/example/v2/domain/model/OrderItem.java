@@ -10,7 +10,8 @@ import lombok.Data;
  */
 @Data
 public class OrderItem {
-    private OrderItemId orderItemId;
+    private OrderItemId id;
+    private OrderId orderId;
     private String itemName;
     private Money price;
     private ProductId productId;
