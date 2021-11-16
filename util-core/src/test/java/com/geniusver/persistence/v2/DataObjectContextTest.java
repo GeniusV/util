@@ -20,8 +20,8 @@ class DataObjectContextTest {
     @Test
     void put() {
         DataObjectContext context = new DataObjectContext();
-        DataA dataA = createDataA(1L);
-        DataB dataB = createDataB(1L);
+        DataA dataA = TestDataFactory.createDataA(1L);
+        DataB dataB = TestDataFactory.createDataB(1L);
 
         context.put(dataA, DataA.class, DataA::getId)
                 .put(dataB, DataB.class, DataB::getId);
@@ -37,10 +37,10 @@ class DataObjectContextTest {
     void putAll() {
         DataObjectContext context = new DataObjectContext();
         List<DataA> dataAList = LongStream.range(0, 10)
-                .mapToObj(this::createDataA)
+                .mapToObj(TestDataFactory::createDataA)
                 .collect(Collectors.toList());
         List<DataB> dataBList = LongStream.range(0, 10)
-                .mapToObj(this::createDataB)
+                .mapToObj(TestDataFactory::createDataB)
                 .collect(Collectors.toList());
 
         context.put(dataAList, DataA.class, DataA::getId)
@@ -50,21 +50,5 @@ class DataObjectContextTest {
         assertIterableEquals(dataBList, context.getAll(DataB.class));
     }
 
-    DataA createDataA(Long id) {
-        DataA dataA = new DataA();
-        dataA.setId(id);
-        dataA.setData1("dataA-" + id);
-        dataA.setVersion(1L);
-        return dataA;
-    }
-
-
-    DataB createDataB(Long id) {
-        DataB dataB = new DataB();
-        dataB.setId(id);
-        dataB.setData2("dataB-" + id);
-        dataB.setVersion(1L);
-        return dataB;
-    }
 
 }
