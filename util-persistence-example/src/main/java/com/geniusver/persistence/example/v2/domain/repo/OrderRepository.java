@@ -1,5 +1,7 @@
-package com.geniusver.persistence.example.v2.domain;
+package com.geniusver.persistence.example.v2.domain.repo;
 
+import com.geniusver.persistence.example.v2.domain.model.Order;
+import com.geniusver.persistence.example.v2.domain.model.OrderId;
 import com.geniusver.persistence.example.v2.infra.OrderDao;
 import com.geniusver.persistence.example.v2.infra.OrderDo;
 import com.geniusver.persistence.example.v2.infra.OrderItemDao;
@@ -31,8 +33,11 @@ public class OrderRepository implements Repository<OrderId, Order> {
         aggregate.getDataObjectContext().put(orderDo, OrderDo.class, OrderDo::getId);
         aggregate.getDataObjectContext().put(orderItemDoList, OrderItemDo.class, OrderItemDo::getId);
 
-        // TODO: 11/16/2021 create aggregate
-        return null;
+        // TODO: 11/16/2021 create entity and set to aggregate
+        Order order = new Order();
+
+        aggregate.setRoot(order);
+        return aggregate;
     }
 
     @Override

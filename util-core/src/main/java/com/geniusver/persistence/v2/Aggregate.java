@@ -6,11 +6,15 @@ package com.geniusver.persistence.v2;
  * @author GeniusV
  */
 public class Aggregate<R> {
-    protected R rootEntity;
+    protected R root;
     protected DataObjectContext dataObjectContext;
 
-    public R getRootEntity() {
-        return rootEntity;
+    public R getRoot() {
+        return root;
+    }
+
+    public void setRoot(R root) {
+        this.root = root;
     }
 
     public DataObjectContext getDataObjectContext() {

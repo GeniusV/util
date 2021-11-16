@@ -1,4 +1,4 @@
-package com.geniusver.persistence.example.v2.domain;
+package com.geniusver.persistence.example.v2.domain.model;
 
 /**
  * OrderId
