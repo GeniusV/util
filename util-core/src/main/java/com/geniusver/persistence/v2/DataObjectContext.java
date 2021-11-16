@@ -14,7 +14,7 @@ import java.util.function.Function;
  */
 
 // TODO: 11/15/2021
-public class DataObjectStore {
+public class DataObjectContext {
     private Map<Class, ClassBin> classBinMap = new HashMap<>();
 
     public <T> T get(Object id, Class<T> type) {
@@ -26,7 +26,7 @@ public class DataObjectStore {
     }
 
 
-    public void put(Object object, Class clazz, Function<Object, Object> idFunction) {
+    public <T> void put(Object object, Class<T> clazz, Function<T, Object> idFunction) {
         Assert.notNull(object);
         Assert.notNull(clazz);
         Assert.notNull(idFunction);

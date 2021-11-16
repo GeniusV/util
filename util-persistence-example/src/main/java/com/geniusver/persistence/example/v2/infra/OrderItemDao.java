@@ -7,8 +7,10 @@ import java.util.List;
  *
  * @author GeniusV
  */
-public class OrderItemDao {
-    public List<OrderItemDo> queryByOrderId(Long value) {
-        return null;
-    }
+public interface OrderItemDao {
+    List<OrderItemDo> queryByOrderId(Long value);
+
+    OrderItemDo insert(OrderItemDo orderItemDo);
+
+    OrderItemDo update(OrderItemDo orderItemDo);
 }

@@ -7,4 +7,8 @@ package com.geniusver.persistence.example.v2.infra;
  */
 public interface OrderDao {
     OrderDo query(Long value);
+
+    OrderDo insert(OrderDo orderDo);
+
+    OrderDo update(OrderDo orderDo);
 }

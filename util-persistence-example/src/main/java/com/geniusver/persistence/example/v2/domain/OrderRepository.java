@@ -28,30 +28,52 @@ public class OrderRepository implements Repository<OrderId, Order> {
         OrderDo orderDo = orderDao.query(id.value);
         List<OrderItemDo> orderItemDoList = orderItemDao.queryByOrderId(id.value);
 
-        aggregate.getOldDataObjectStore().put(orderDo, OrderDo.class, null);
-        aggregate.getOldDataObjectStore().put(orderItemDoList, OrderItemDo.class, null);
+        aggregate.getDataObjectContext().put(orderDo, OrderDo.class, OrderDo::getId);
+        aggregate.getDataObjectContext().put(orderItemDoList, OrderItemDo.class, OrderItemDo::getId);
 
-        // construct entity
+        // TODO: 11/16/2021 create aggregate
         return null;
     }
 
     @Override
     public void save(Aggregate<Order> aggregate) {
-        // convert entity to do
+        // TODO: 11/16/2021 convert entity to do
         OrderDo orderDo = null;
-        List<OrderItemDo> orderItemDoList;
+        List<OrderItemDo> orderItemDoList = null;
 
-        CompareResult<OrderDo> orderDoResult = CompareUtil.compare(aggregate.getOldDataObjectStore().getList(OrderDo.class),
+        compareAndSaveOrderDo(aggregate, orderDo);
+
+        compareAndSaveOrderItemDo(aggregate, orderItemDoList);
+    }
+
+    private void compareAndSaveOrderItemDo(Aggregate<Order> aggregate, List<OrderItemDo> orderItemDoList) {
+        CompareResult<OrderItemDo> orderItemDoCompareResult = CompareUtil.compare(aggregate.getDataObjectContext().getList(OrderItemDo.class),
+                orderItemDoList,
+                OrderItemDo::getId);
+
+        orderItemDoCompareResult.toInsertList().forEach(toInsert -> {
+            OrderItemDo inserted = orderItemDao.insert(toInsert);
+            aggregate.getDataObjectContext().put(inserted, OrderItemDo.class, OrderItemDo::getId);
+        });
+        orderItemDoCompareResult.toInsertList().forEach(toInsert -> {
+            OrderItemDo inserted = orderItemDao.insert(toInsert);
+            aggregate.getDataObjectContext().put(inserted, OrderItemDo.class, OrderItemDo::getId);
+        });
+    }
+
+    private void compareAndSaveOrderDo(Aggregate<Order> aggregate, OrderDo orderDo) {
+        CompareResult<OrderDo> orderDoResult = CompareUtil.compare(aggregate.getDataObjectContext().getList(OrderDo.class),
                 Collections.singletonList(orderDo),
                 OrderDo::getId);
 
-        List<OrderDo> toInsertList = orderDoResult.toInsertList();
-        List<OrderDo> toUpdateList = orderDoResult.toUpdateList();
-
-        //update or insert
-
-//        CompareResult<OrderDo> orderItemDoList = CompareUtil.compare(aggregate.getOldDataObjectStore().getList(OrderItemDo.class),
-//                Arrays.asList(orderDo),
-//                obj -> obj.getId());
+        // Insert or update, then store new data objects with new version
+        orderDoResult.toInsertList().forEach(obj -> {
+            OrderDo inserted = orderDao.insert(obj);
+            aggregate.getDataObjectContext().put(inserted, OrderDo.class, OrderDo::getId);
+        });
+        orderDoResult.toUpdateList().forEach(obj -> {
+            OrderDo inserted = orderDao.insert(obj);
+            aggregate.getDataObjectContext().put(inserted, OrderDo.class, OrderDo::getId);
+        });
     }
 }

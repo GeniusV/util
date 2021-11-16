@@ -7,13 +7,13 @@ package com.geniusver.persistence.v2;
  */
 public class Aggregate<R> {
     protected R rootEntity;
-    protected DataObjectStore oldDataObjectStore;
+    protected DataObjectContext dataObjectContext;
 
     public R getRootEntity() {
         return rootEntity;
     }
 
-    public DataObjectStore getOldDataObjectStore() {
-        return oldDataObjectStore;
+    public DataObjectContext getDataObjectContext() {
+        return dataObjectContext;
     }
 }
