@@ -16,7 +16,6 @@ import org.mapstruct.factory.Mappers;
 public interface OrderDoConverter {
     OrderDoConverter INSTANCE = Mappers.getMapper(OrderDoConverter.class);
 
-    // TODO: 11/16/2021
     @Mapping(source = "id", target = "id.value")
     @Mapping(source = "userId", target = "userId.value")
     @Mapping(source = "productId", target = "productId.value")

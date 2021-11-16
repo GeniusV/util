@@ -2,6 +2,7 @@ package com.geniusver.persistence.example.v2.domain.repo;
 
 import com.geniusver.persistence.example.v2.domain.model.Order;
 import com.geniusver.persistence.example.v2.domain.model.OrderId;
+import com.geniusver.persistence.example.v2.domain.model.OrderItem;
 import com.geniusver.persistence.example.v2.infra.OrderDao;
 import com.geniusver.persistence.example.v2.infra.OrderDo;
 import com.geniusver.persistence.example.v2.infra.OrderItemDao;
@@ -13,6 +14,7 @@ import com.geniusver.persistence.v2.Repository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * OrderRepository
@@ -33,8 +35,10 @@ public class OrderRepository implements Repository<OrderId, Order> {
         aggregate.getDataObjectContext().put(orderDo, OrderDo.class, OrderDo::getId);
         aggregate.getDataObjectContext().put(orderItemDoList, OrderItemDo.class, OrderItemDo::getId);
 
-        // TODO: 11/16/2021 create entity and set to aggregate
-        Order order = new Order();
+        Order order = OrderDoConverter.INSTANCE.toOrder(orderDo);
+        List<OrderItem> orderItems = orderItemDoList.stream().map(OrderItemDoConverter.INSTANCE::toOrderItem)
+                .collect(Collectors.toList());
+        order.setOrderItems(orderItems);
 
         aggregate.setRoot(order);
         return aggregate;
@@ -42,9 +46,12 @@ public class OrderRepository implements Repository<OrderId, Order> {
 
     @Override
     public void save(Aggregate<Order> aggregate) {
-        // TODO: 11/16/2021 convert entity to do
-        OrderDo orderDo = null;
-        List<OrderItemDo> orderItemDoList = null;
+        Order order = aggregate.getRoot();
+
+        OrderDo orderDo = OrderDoConverter.INSTANCE.toOrderDo(order);
+        List<OrderItemDo> orderItemDoList = order.getOrderItems().stream()
+                .map(OrderItemDoConverter.INSTANCE::toOrderItemDo)
+                .collect(Collectors.toList());
 
         compareAndSaveOrderDo(aggregate, orderDo);
 
@@ -80,5 +87,10 @@ public class OrderRepository implements Repository<OrderId, Order> {
             OrderDo inserted = orderDao.insert(obj);
             aggregate.getDataObjectContext().put(inserted, OrderDo.class, OrderDo::getId);
         });
+    }
+
+    public OrderRepository(OrderDao orderDao, OrderItemDao orderItemDao) {
+        this.orderDao = orderDao;
+        this.orderItemDao = orderItemDao;
     }
 }
