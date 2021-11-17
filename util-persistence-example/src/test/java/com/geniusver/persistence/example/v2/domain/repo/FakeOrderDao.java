@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class FakeOrderDao implements OrderDao {
     private Map<Long, OrderDo> map = new ConcurrentHashMap<>();
+    private boolean printLogs = true;
 
     @Override
     public OrderDo query(Long value) {
@@ -23,7 +24,9 @@ public class FakeOrderDao implements OrderDao {
     @Override
     public OrderDo insert(OrderDo orderDo) {
         orderDo.setVersion(1L);
-        System.out.println(StrFormatter.format("OrderDao: insert {} -> {}", orderDo.getId(), orderDo));
+        if (printLogs) {
+            System.out.println(StrFormatter.format("OrderDao: insert {} -> {}", orderDo.getId(), orderDo));
+        }
         map.put(orderDo.getId(), orderDo);
         return orderDo;
     }
@@ -41,8 +44,26 @@ public class FakeOrderDao implements OrderDao {
         }
 
         orderDo.setVersion(orderDo.getVersion() + 1);
-        System.out.println(StrFormatter.format("OrderDao: update {} -> {}", orderDo.getId(), orderDo));
+        if (printLogs) {
+            System.out.println(StrFormatter.format("OrderDao: update {} -> {}", orderDo.getId(), orderDo));
+        }
         map.put(orderDo.getId(), orderDo);
         return orderDo;
+    }
+
+    public Map<Long, OrderDo> getMap() {
+        return map;
+    }
+
+    public void setMap(Map<Long, OrderDo> map) {
+        this.map = map;
+    }
+
+    public boolean isPrintLogs() {
+        return printLogs;
+    }
+
+    public void setPrintLogs(boolean printLogs) {
+        this.printLogs = printLogs;
     }
 }

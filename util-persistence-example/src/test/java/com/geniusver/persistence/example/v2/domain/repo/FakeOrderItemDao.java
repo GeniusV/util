@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
  */
 public class FakeOrderItemDao implements OrderItemDao {
     private Map<Long, OrderItemDo> map = new ConcurrentHashMap<>();
+    private boolean printLogs = true;
 
     @Override
     public List<OrderItemDo> queryByOrderId(Long value) {
@@ -27,7 +28,9 @@ public class FakeOrderItemDao implements OrderItemDao {
     @Override
     public OrderItemDo insert(OrderItemDo orderItemDo) {
         orderItemDo.setVersion(1L);
-        System.out.println(StrFormatter.format("OrderItemDao: insert {} -> {}", orderItemDo.getId(), orderItemDo));
+        if (printLogs) {
+            System.out.println(StrFormatter.format("OrderItemDao: insert {} -> {}", orderItemDo.getId(), orderItemDo));
+        }
         map.put(orderItemDo.getId(), orderItemDo);
         return orderItemDo;
     }
@@ -45,8 +48,18 @@ public class FakeOrderItemDao implements OrderItemDao {
         }
 
         orderItemDo.setVersion(orderItemDo.getVersion() + 1);
-        System.out.println(StrFormatter.format("OrderItemDao: update {} -> {}", orderItemDo.getId(), orderItemDo));
+        if (printLogs) {
+            System.out.println(StrFormatter.format("OrderItemDao: update {} -> {}", orderItemDo.getId(), orderItemDo));
+        }
         map.put(orderItemDo.getId(), orderItemDo);
         return orderItemDo;
+    }
+
+    public boolean isPrintLogs() {
+        return printLogs;
+    }
+
+    public void setPrintLogs(boolean printLogs) {
+        this.printLogs = printLogs;
     }
 }

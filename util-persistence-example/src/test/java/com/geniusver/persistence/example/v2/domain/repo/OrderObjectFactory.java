@@ -32,6 +32,15 @@ public class OrderObjectFactory {
         return order;
     }
 
+    public static Order createOrder(long i) {
+        Order order = new Order();
+        order.setId(new OrderId(i));
+        order.setUserId(new UserId(2L));
+        order.setProductId(new ProductId(3L));
+        order.setPrice(new Money("CNY", new BigDecimal("12.31")));
+        return order;
+    }
+
     public static OrderItemDo createOrderItemDo() {
         OrderItemDo orderItemDo = new OrderItemDo();
         orderItemDo.setId(1L);
