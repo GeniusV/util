@@ -51,12 +51,13 @@ class OrderRepositoryTest {
      * thread 1 order num 1 order item 10 qps 240000
      * thread 1 order num 1 order item 25 qps 100000
      * thread 1 order num 1 order item 50 qps 60000
+     * thread 1 order num 1 order item 100 qps 32000
      */
     @Disabled
     @Test
     void benchmark() {
         int orderNum = 1;
-        int orderItemNum = 10;
+        int orderItemNum = 100;
         FakeOrderDao orderDao = new FakeOrderDao();
         orderDao.setPrintLogs(false);
         FakeOrderItemDao orderItemDao = new FakeOrderItemDao();
@@ -77,7 +78,7 @@ class OrderRepositoryTest {
         Metrics metrics = new Metrics("order repo");
         metrics.start();
 
-        new ConcurrentTester().addWorker(2, () -> {
+        new ConcurrentTester().addWorker(1, () -> {
             while (true) {
                 OrderId id = new OrderId(RandomUtil.randomLong(0, orderNum));
                 Aggregate<Order> orderAggregate = orderRepository.find(id);
