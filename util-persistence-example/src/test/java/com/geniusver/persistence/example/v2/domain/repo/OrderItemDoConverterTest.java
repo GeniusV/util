@@ -4,6 +4,8 @@ import com.geniusver.persistence.example.v2.domain.model.OrderItem;
 import com.geniusver.persistence.example.v2.infra.OrderItemDo;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * OrderItemDoConverterTest
  *
@@ -27,4 +29,11 @@ class OrderItemDoConverterTest {
         System.out.println(orderItemDo);
     }
 
+    @Test
+    void equalsTest() {
+        OrderItemDo orderItemDo1 = OrderObjectFactory.createOrderItemDo();
+        OrderItemDo orderItemDo2 = OrderObjectFactory.createOrderItemDo();
+        orderItemDo2.setVersion(null);
+        assertEquals(orderItemDo1, orderItemDo2);
+    }
 }

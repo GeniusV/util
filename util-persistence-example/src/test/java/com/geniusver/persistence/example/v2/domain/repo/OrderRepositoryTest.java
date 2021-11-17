@@ -37,6 +37,7 @@ class OrderRepositoryTest {
         order.setProductId(new ProductId(12893L));
         orderRepository.save(aggregate);
 
-        //// TODO: 11/16/2021 old new pair to copy version
+        aggregate.getRoot().getOrderItems().get(3).setQuantity(900);
+        orderRepository.save(aggregate);
     }
 }

@@ -58,22 +58,6 @@ public class OrderRepository implements Repository<OrderId, Order> {
         compareAndSaveOrderItemDo(aggregate, orderItemDoList);
     }
 
-    private void compareAndSaveOrderItemDo(Aggregate<Order> aggregate, List<OrderItemDo> orderItemDoList) {
-        CompareResult<OrderItemDo> orderItemDoCompareResult = CompareUtil.compare(aggregate.getDataObjectContext().getAll(OrderItemDo.class),
-                orderItemDoList,
-                OrderItemDo::getId);
-
-        orderItemDoCompareResult.toInsert(toInsert -> {
-            OrderItemDo inserted = orderItemDao.insert(toInsert);
-            aggregate.getDataObjectContext().put(inserted, OrderItemDo.class, OrderItemDo::getId);
-        });
-        orderItemDoCompareResult.toUpdate((oldDo, newDo) -> {
-            newDo.setVersion(oldDo.getVersion());
-            OrderItemDo updated = orderItemDao.update(newDo);
-            aggregate.getDataObjectContext().put(updated, OrderItemDo.class, OrderItemDo::getId);
-        });
-    }
-
     private void compareAndSaveOrderDo(Aggregate<Order> aggregate, OrderDo orderDo) {
         CompareResult<OrderDo> orderDoResult = CompareUtil.compare(aggregate.getDataObjectContext().getAll(OrderDo.class),
                 Collections.singletonList(orderDo),
@@ -88,6 +72,22 @@ public class OrderRepository implements Repository<OrderId, Order> {
             newDo.setVersion(oldDo.getVersion());
             OrderDo updated = orderDao.update(newDo);
             aggregate.getDataObjectContext().put(updated, OrderDo.class, OrderDo::getId);
+        });
+    }
+
+    private void compareAndSaveOrderItemDo(Aggregate<Order> aggregate, List<OrderItemDo> orderItemDoList) {
+        CompareResult<OrderItemDo> orderItemDoCompareResult = CompareUtil.compare(aggregate.getDataObjectContext().getAll(OrderItemDo.class),
+                orderItemDoList,
+                OrderItemDo::getId);
+
+        orderItemDoCompareResult.toInsert(toInsert -> {
+            OrderItemDo inserted = orderItemDao.insert(toInsert);
+            aggregate.getDataObjectContext().put(inserted, OrderItemDo.class, OrderItemDo::getId);
+        });
+        orderItemDoCompareResult.toUpdate((oldDo, newDo) -> {
+            newDo.setVersion(oldDo.getVersion());
+            OrderItemDo updated = orderItemDao.update(newDo);
+            aggregate.getDataObjectContext().put(updated, OrderItemDo.class, OrderItemDo::getId);
         });
     }
 

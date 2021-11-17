@@ -1,6 +1,7 @@
 package com.geniusver.persistence.example.v2.infra;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
@@ -18,5 +19,6 @@ public class OrderItemDo {
     private BigDecimal price;
     private Long productId;
     private Integer quantity;
+    @EqualsAndHashCode.Exclude
     private Long version;
 }
