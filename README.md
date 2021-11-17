@@ -12,6 +12,42 @@ Contains useful utils:
 - `RetryHandler`: Retry operation if any exception thrown with specific retry times and intervals. `RetryHandler` is
   also capable of executing fallback logic if all retries fails.
 
+## Persistence V2
+
+### Repository
+
+- Convert data objects to `Entity` and vice versa, so that we can un-couple business logic and underlying data
+  structure.
+- Compare new data objects with old ones stored in context and call dao methods to update or insert them. Repository
+  responsible for perform some extra operations before call dao methods. For example, due to data objects are converted
+  by mapstructure and there is no version field in entities, new data objects version value will be null. In this case,
+  repository should copy version value from old data object to new data object.
+- It is recommended to put updated data object back to context.
+
+### Dao
+
+Communicate with infrastructure store components (like a database). Input output object is data object (`DO`).
+
+**Data Object**
+
+- A data object should contains basic type data only, no E-R relationship. For an `OrderDo` can
+  contains `Bigdecimal amount` but should not contains `List<OrderItemDo> orderItems`.
+- A data object is the minimum operation unit, that means you should insert or update all fields in one database at one.
+- `equals()` should be overided, which will be used to determine if a data object should be updated or not.
+
+Recommend to update data object to latest state after an update operation. For example, dao will execute sql to do
+update:
+
+```sql
+update t_order
+set amount  = 1.00,
+    version = version + 1
+where order_id = 1
+  and version = 1
+```
+
+After execute the sql, you should update set version=2 of data object.
+
 ## util-arthas
 
 Can directly run arthas command in unit tests.
