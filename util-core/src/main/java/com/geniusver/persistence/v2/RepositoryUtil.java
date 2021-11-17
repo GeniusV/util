@@ -11,7 +11,7 @@ import java.util.function.Function;
  */
 public class RepositoryUtil {
     /**
-     * @param newDataObjects   new data object collections to compare
+     * @param newDataObjects   new data objects to compare
      * @param clazz            new data object type
      * @param getId            get id from a data object
      * @param copyVersion      copy version from old to new
