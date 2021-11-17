@@ -26,7 +26,7 @@ public class CompareUtil {
         Map<Object, T> oldMap = oldList.stream().collect(Collectors.toMap(idFunction, obj -> obj));
 
         List<T> insertList = new ArrayList<>();
-        List<T> updateList = new ArrayList<>();
+        List<OldNew<T>> updateList = new ArrayList<>();
 
         for (T newObject : newList) {
             Object id = idFunction.apply(newObject);
@@ -40,7 +40,7 @@ public class CompareUtil {
             }
 
             if (!oldObject.equals(newObject)) {
-                updateList.add(newObject);
+                updateList.add(new OldNew<>(oldObject, newObject));
             }
         }
 
