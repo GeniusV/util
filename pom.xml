@@ -23,7 +23,7 @@
     <groupId>com.geniusver</groupId>
     <artifactId>util</artifactId>
     <packaging>pom</packaging>
-    <version>0.2.0</version>
+    <version>0.2.1-SNAPSHOT</version>
     <modules>
         <module>util-arthas</module>
         <module>util-core</module>
