@@ -23,11 +23,11 @@
     <groupId>com.geniusver</groupId>
     <artifactId>util</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.2.0</version>
     <modules>
         <module>util-arthas</module>
         <module>util-core</module>
-        <module>util-persistence-example</module>
+<!--        <module>util-persistence-example</module>-->
     </modules>
 
     <name>util</name>
